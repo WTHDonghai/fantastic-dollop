@@ -1,6 +1,6 @@
 'use server';
 
-import { generateText, type UIMessage } from 'ai';
+import type { UIMessage } from 'ai';
 import { cookies } from 'next/headers';
 import {
   deleteMessagesByChatIdAfterTimestamp,
@@ -8,7 +8,6 @@ import {
   updateChatVisiblityById,
 } from '@/lib/db/queries';
 import type { VisibilityType } from '@/components/visibility-selector';
-import { myProvider } from '@/lib/ai/providers';
 import { Client } from '@langchain/langgraph-sdk';
 
 export async function saveChatModelAsCookie(model: string) {
@@ -76,7 +75,7 @@ export async function generateTitleFromUserMessage({
       console.log(`[Title Agent] 事件 #${eventCount}:`, {
         event: chunk.event,
         data_type: typeof chunk.data,
-        data_preview: chunk.data ? JSON.stringify(chunk.data).substring(0, 200) + '...' : null
+        data_preview: chunk.data ? `${JSON.stringify(chunk.data).substring(0, 200)}...` : null
       });
       
       // 处理 values 事件获取 title
@@ -107,9 +106,9 @@ export async function generateTitleFromUserMessage({
     
   } catch (error) {
     console.error('[Title Agent] 错误:', {
-      message: error.message,
-      stack: error.stack,
-      name: error.name
+      message: (error as Error).message,
+      stack: (error as Error).stack,
+      name: (error as Error).name
     });
     throw error;
   }
