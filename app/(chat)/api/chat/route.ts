@@ -105,12 +105,12 @@ export async function POST(request: Request) {
     const chat = await getChatById({ id });
 
     if (!chat) {
-      const title = await generateTitleFromUserMessage({
+      const { title, threadId } = await generateTitleFromUserMessage({
         message,
       });
-
+    
       await saveChat({
-        id,
+        id: threadId,
         userId: session.user.id,
         title,
         visibility: selectedVisibilityType,
