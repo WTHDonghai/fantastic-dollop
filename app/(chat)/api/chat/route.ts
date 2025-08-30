@@ -66,6 +66,7 @@ export async function POST(request: Request) {
   let requestBody: PostRequestBody;
 
   try {
+    console.log(`== Chat Request: ${request.json()} ==`)
     const json = await request.json();
     requestBody = postRequestBodySchema.parse(json);
   } catch (_) {
@@ -123,6 +124,7 @@ export async function POST(request: Request) {
 
     const messagesFromDb = await getMessagesByChatId({ id });
     const uiMessages = [...convertToUIMessages(messagesFromDb), message];
+    console.log(`== uiMessages: ${JSON.stringify(uiMessages)} ==`)
 
     const { longitude, latitude, city, country } = geolocation(request);
 

@@ -6,32 +6,35 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const chatId = searchParams.get('chatId');
 
-  if (!chatId) {
-    return new ChatSDKError(
-      'bad_request:api',
-      'Parameter chatId is required.',
-    ).toResponse();
-  }
+  console.log('== Get Votes chatId ==', chatId);
 
-  const session = await auth();
+  // [todo]: 暂时注释
+  // if (!chatId) {
+  //   return new ChatSDKError(
+  //     'bad_request:api',
+  //     'Parameter chatId is required.',
+  //   ).toResponse();
+  // }
 
-  if (!session?.user) {
-    return new ChatSDKError('unauthorized:vote').toResponse();
-  }
+  // const session = await auth();
 
-  const chat = await getChatById({ id: chatId });
+  // if (!session?.user) {
+  //   return new ChatSDKError('unauthorized:vote').toResponse();
+  // }
 
-  if (!chat) {
-    return new ChatSDKError('not_found:chat').toResponse();
-  }
+  // const chat = await getChatById({ id: chatId });
 
-  if (chat.userId !== session.user.id) {
-    return new ChatSDKError('forbidden:vote').toResponse();
-  }
+  // if (!chat) {
+  //   return new ChatSDKError('not_found:chat').toResponse();
+  // }
 
-  const votes = await getVotesByChatId({ id: chatId });
+  // if (chat.userId !== session.user.id) {
+  //   return new ChatSDKError('forbidden:vote').toResponse();
+  // }
 
-  return Response.json(votes, { status: 200 });
+  // const votes = await getVotesByChatId({ id: chatId });
+
+  return Response.json([], { status: 200 });
 }
 
 export async function PATCH(request: Request) {
