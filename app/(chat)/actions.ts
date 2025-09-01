@@ -1,4 +1,4 @@
-'use server';
+"use server";
 
 import type { UIMessage } from 'ai';
 import { cookies } from 'next/headers';
@@ -9,6 +9,7 @@ import {
 } from '@/lib/db/queries';
 import type { VisibilityType } from '@/components/visibility-selector';
 import { Client } from '@langchain/langgraph-sdk';
+import { getTextFromMessage } from '@/lib/utils';
 
 export async function saveChatModelAsCookie(model: string) {
   const cookieStore = await cookies();
@@ -35,7 +36,7 @@ export async function generateTitleFromUserMessage({
   try {
     const assistant = await client.assistants.create({
       graphId: "title-agent",
-      config: { "tags": ["title", "e2e"], "model": "openai/glm-4.5" },
+      config: { "tags": ["title"], "model": "openai/glm-4.5" },
       ifExists: "do_nothing",
     });
     console.log('[Title Agent] Assistant 创建成功:', {
@@ -48,20 +49,25 @@ export async function generateTitleFromUserMessage({
       thread_id: thread.thread_id
     });
 
+    // 安全提取用户文本，构造符合 LangGraph SDK 的标准消息结构
+    const userText = getTextFromMessage(message as any) || '';
+    const inputMessages = [
+      {
+        role: 'user',
+        content: [{ type: 'text', text: userText }],
+      },
+    ] as any[];
+    console.log('[Title Agent] 标题生成输入 messages:', JSON.stringify(inputMessages, null, 2));
+
     console.log('[Title Agent] 开始流式处理...');
     const stream = await client.runs.stream(
       thread.thread_id,
       assistant.assistant_id,
       {
         config: assistant.config || {},
-        streamMode: ["values", "messages"], // 添加 stream mode 配置
+        streamMode: ["values"],
         input: {
-          messages: [
-            {
-              role: 'user',
-              content: JSON.stringify(message)
-            },
-          ],
+          messages: inputMessages,
         },
       }
     );
@@ -73,22 +79,22 @@ export async function generateTitleFromUserMessage({
     for await (const chunk of stream) {
       eventCount++;
       console.log(`[Title Agent] 事件 #${eventCount}:`, {
-        event: chunk.event,
-        data_type: typeof chunk.data,
-        data_preview: chunk.data ? `${JSON.stringify(chunk.data).substring(0, 200)}...` : null
+        event: (chunk as any).event,
+        data_type: typeof (chunk as any).data,
+        data_preview: (chunk as any).data ? `${JSON.stringify((chunk as any).data).substring(0, 200)}...` : null
       });
       
       // 处理 values 事件获取 title
-      if (chunk.event === "values" && chunk.data) {
-        const data = chunk.data as any;
+      if ((chunk as any).event === "values" && (chunk as any).data) {
+        const data = (chunk as any).data as any;
         if (data.title) {
           title = data.title;
           console.log('[Title Agent] 从 values 事件获取到标题:', title);
         }
       }
-      if (chunk.event === "end") {
-          completed = true
-        console.log('[Title Agent] 流处理完成，事件类型:', chunk.event);
+      if ((chunk as any).event === "end") {
+        completed = true;
+        console.log('[Title Agent] 流处理完成，事件类型:', (chunk as any).event);
       }
     }
 

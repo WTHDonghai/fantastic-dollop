@@ -17,6 +17,7 @@ export function DataStreamHandler() {
     const newDeltas = dataStream.slice(lastProcessedIndex.current + 1);
     lastProcessedIndex.current = dataStream.length - 1;
 
+    console.log(`== newDeltas: ${JSON.stringify(newDeltas)} ==`);
     newDeltas.forEach((delta) => {
       const artifactDefinition = artifactDefinitions.find(
         (artifactDefinition) => artifactDefinition.kind === artifact.kind,
