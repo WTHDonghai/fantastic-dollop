@@ -5,7 +5,7 @@ import {
   smoothStream,
   stepCountIs,
 } from 'ai';
-import { Client } from '@langchain/langgraph-sdk';
+import { Client, Thread } from '@langchain/langgraph-sdk';
 import { auth, type UserType } from '@/app/(auth)/auth';
 import { type RequestHints, systemPrompt } from '@/lib/ai/prompts';
 import {
@@ -24,7 +24,6 @@ import { updateDocument } from '@/lib/ai/tools/update-document';
 import { requestSuggestions } from '@/lib/ai/tools/request-suggestions';
 import { getWeather } from '@/lib/ai/tools/get-weather';
 import { isProductionEnvironment, isTestEnvironment } from '@/lib/constants';
-// import { myProvider } from '@/lib/ai/providers'; // 替换为 langgraph
 
 import { entitlementsByUserType } from '@/lib/ai/entitlements';
 import { postRequestBodySchema, type PostRequestBody } from './schema';
@@ -38,8 +37,6 @@ import { ChatSDKError } from '@/lib/errors';
 import type { ChatMessage } from '@/lib/types';
 import type { ChatModel } from '@/lib/ai/models';
 import type { VisibilityType } from '@/components/visibility-selector';
-import { title } from 'process';
-import { Chat } from '@/lib/db/schema';
 
 // 全局错误处理：捕获未处理的 Promise 拒绝和未捕获异常，便于定位 "reading 'text'" 的来源
 (() => {
@@ -107,7 +104,7 @@ export async function POST(request: Request) {
   try {
     const json = await request.json();
     requestBody = postRequestBodySchema.parse(json);
-    console.log(`== Chat Request: ${requestBody} ==`)
+    console.log(`== Chat Request: ${json} ==`)
   } catch (_) {
     return new ChatSDKError('bad_request:api').toResponse();
   }
@@ -125,7 +122,14 @@ export async function POST(request: Request) {
       selectedVisibilityType: VisibilityType;
     } = requestBody;
 
+    console.log(`== chat id: ${id} ==`)
+
     const session = await auth();
+
+    // 创建 LangGraph 客户端
+    const client = new Client({
+      apiUrl: process.env.LANGGRAPH_API_URL || 'http://localhost:8000/api',
+    });
 
     if (!session?.user) {
       return new ChatSDKError('unauthorized:chat').toResponse();
@@ -143,6 +147,7 @@ export async function POST(request: Request) {
     }
 
     let chat = await getChatById({ id });
+    let thread: Thread;
 
     if (!chat) {
       const { title } = await generateTitleFromUserMessage({
@@ -157,10 +162,23 @@ export async function POST(request: Request) {
       });
       console.log(`chat info: ${JSON.stringify(chat, null, 2)}`)
 
+      // 创建会话
+      thread = await client.threads.create({
+        threadId: id, // 直接使用 chat ID 作为 thread ID
+        metadata: {
+          tags: [{ "title": chat.title }] // 修正：使用 chat.title 而不是 process.title
+        },
+        ifExists: "do_nothing", // 如果 thread 已存在则不重新创建
+      });
+      console.log('[Chat Agent] Thread 创建成功:', {
+        thread_id: thread.thread_id
+      });
+
     } else {
       if (chat.userId !== session.user.id) {
         return new ChatSDKError('forbidden:chat').toResponse();
       }
+      thread = await client.threads.get(id)
     }
 
     const messagesFromDb = await getMessagesByChatId({ id });
@@ -192,11 +210,6 @@ export async function POST(request: Request) {
     const streamId = generateUUID();
     await createStreamId({ streamId, chatId: id });
 
-    // 创建 LangGraph 客户端
-    const client = new Client({
-      apiUrl: process.env.LANGGRAPH_API_URL || 'http://localhost:8000/api',
-    });
-
     console.log('[Chat Agent] LangGraph 客户端已创建，API URL:', process.env.LANGGRAPH_API_URL || 'http://localhost:8000/api');
     // 创建或获取 assistant
     const assistant = await client.assistants.create({
@@ -218,19 +231,6 @@ export async function POST(request: Request) {
     console.log('[Chat Agent] Assistant 创建成功:', {
       assistant_id: assistant.assistant_id,
       config: assistant.config
-    });
-
-    // 创建线程
-    console.log(`chat title: ${chat.title}`)
-    const thread = await client.threads.create({
-      threadId: id,
-      ifExists: "do_nothing",
-      metadata: {
-        tags: [{"title": title}]
-      }
-    });
-    console.log('[Chat Agent] Thread 创建成功:', {
-      thread_id: thread.thread_id
     });
 
     // 安全构造仅文本内容的消息，避免访问未定义的 part.text
@@ -289,7 +289,7 @@ export async function POST(request: Request) {
                 streamMode: ["messages"],
                 input: {
                   messages: simpleMessages,
-                },
+                }
               }
             );
           } catch (e: any) {
@@ -341,7 +341,7 @@ export async function POST(request: Request) {
                     }
 
                     if (text && text.length) {
-                      console.log(`[Chat Agent] 输出文本增量, text-delta: "${text}"`);
+                      // console.log(`[Chat Agent] 输出文本增量, text-delta: "${text}"`);
                       dataStream.write({ id: outMessageId, type: 'text-delta', delta: text });
                     }
                   }

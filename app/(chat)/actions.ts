@@ -59,7 +59,7 @@ export async function generateTitleFromUserMessage({
     ] as any[];
     console.log('[Title Agent] 标题生成输入 messages:', JSON.stringify(inputMessages, null, 2));
 
-    console.log('[Title Agent] 开始流式处理...');
+    // console.log('[Title Agent] 开始流式处理...');
     const stream = await client.runs.stream(
       thread.thread_id,
       assistant.assistant_id,
@@ -78,18 +78,18 @@ export async function generateTitleFromUserMessage({
     
     for await (const chunk of stream) {
       eventCount++;
-      console.log(`[Title Agent] 事件 #${eventCount}:`, {
-        event: (chunk as any).event,
-        data_type: typeof (chunk as any).data,
-        data_preview: (chunk as any).data ? `${JSON.stringify((chunk as any).data).substring(0, 200)}...` : null
-      });
+      // console.log(`[Title Agent] 事件 #${eventCount}:`, {
+      //   event: (chunk as any).event,
+      //   data_type: typeof (chunk as any).data,
+      //   data_preview: (chunk as any).data ? `${JSON.stringify((chunk as any).data).substring(0, 200)}...` : null
+      // });
       
       // 处理 values 事件获取 title
       if ((chunk as any).event === "values" && (chunk as any).data) {
         const data = (chunk as any).data as any;
         if (data.title) {
           title = data.title;
-          console.log('[Title Agent] 从 values 事件获取到标题:', title);
+          // console.log('[Title Agent] 从 values 事件获取到标题:', title);
         }
       }
       if ((chunk as any).event === "end") {
