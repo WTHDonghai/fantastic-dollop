@@ -134,16 +134,10 @@ export async function POST(request: Request) {
         title,
         visibility: selectedVisibilityType,
       });
-      console.log(`chat info: ${JSON.stringify(chat, null, 2)}`)
-
-      // 线程创建迁移到封装内部，去除以下代码：
-      // const thread = await client.threads.create({ ... })
     } else {
       if (chat.userId !== session.user.id) {
         return new ChatSDKError('forbidden:chat').toResponse();
       }
-      // 线程获取迁移到封装内部，去除以下代码：
-      // const thread = await client.threads.get(id)
     }
 
     const messagesFromDb = await getMessagesByChatId({ id });
@@ -175,9 +169,6 @@ export async function POST(request: Request) {
     const streamId = generateUUID();
     await createStreamId({ streamId, chatId: id });
 
-    // 助手创建迁移到封装内部
-    // const assistant = await client.assistants.create({ ... })
-
     // 安全构造仅文本内容的消息，避免访问未定义的 part.text
     const userParts = Array.isArray(message.parts) ? message.parts : [];
     const userText = userParts
@@ -203,10 +194,6 @@ export async function POST(request: Request) {
     const stream = createUIMessageStream({
       execute: async ({ writer: dataStream }) => {
         try {
-          // 开始流式处理
-          console.log('[Chat Agent] 开始流式处理...');
-
-          console.log('[Chat Agent] 即将调用 getLangGraphMessageStream ...');
           let lgStream: AsyncIterable<any> | null = null;
           try {
             lgStream = await getLangGraphMessageStream({
@@ -220,7 +207,6 @@ export async function POST(request: Request) {
             console.error('[Chat Agent] getLangGraphMessageStream 调用失败', { message: e?.message, stack: e?.stack, error: e });
             throw e;
           }
-          console.log('[Chat Agent] LangGraph 消息流已返回，开始消费事件...');
 
           let eventCount = 0;
           // 同一条助手消息使用稳定的 ID，避免 UIMessageStream 关联失败
@@ -245,9 +231,13 @@ export async function POST(request: Request) {
                   // 处理消息内容
                   if (data && Array.isArray(data)) {
                     const messageChunk = data[0];
+
+                    const msg_type: string = messageChunk?.type;
+                    const content = messageChunk?.content;
+                    const additional_kwargs = messageChunk?.additional_kwargs
+
                     // 兼容多种可能的 content 结构，提取字符串文本
                     let text: string | undefined;
-                    const content = messageChunk?.content;
                     if (typeof content === 'string') {
                       text = content;
                     } else if (Array.isArray(content)) {
@@ -264,47 +254,82 @@ export async function POST(request: Request) {
                       text = content.text;
                     }
 
-                    if (text && text.length) {
-                      dataStream.write({ id: outMessageId, type: 'text-delta', delta: text });
-                    }
-                  }
-                }
-
-                // 兼容 values 事件（部分图返回在 values 中嵌入 messages）
-                if ("values" === event) {
-                  const messagesFromValues = (data as any)?.messages;
-                  if (Array.isArray(messagesFromValues) && messagesFromValues.length) {
-                    const lastMsg = messagesFromValues[messagesFromValues.length - 1];
-                    if (lastMsg?.role === 'assistant') {
-                      let text: string | undefined;
-                      const content = lastMsg?.content;
-                      if (typeof content === 'string') {
-                        text = content;
-                      } else if (Array.isArray(content)) {
-                        text = content
-                          .map((c: any) =>
-                            typeof c === 'string'
-                              ? c
-                              : typeof c?.text === 'string'
-                                ? c.text
-                                : ''
-                          )
-                          .join('');
-                      } else if (content && typeof content?.text === 'string') {
-                        text = content.text;
-                      }
-
+                    if (msg_type === "AIMessageChunk") {
                       if (text && text.length) {
+                        // console.log(`[Chat Agent] 输出文本增量, text-delta: "${text}"`);
                         dataStream.write({ id: outMessageId, type: 'text-delta', delta: text });
                       }
-                    }
-                  }
+
+                      // 工具开始调用
+                      if (additional_kwargs) {
+                        if ("tool_calls" in additional_kwargs) {
+                          const tool_calls: [any] = additional_kwargs?.tool_calls;
+
+                          for (const tool_call of tool_calls) {
+                            const tool_fun = tool_call?.function
+                            const toolCallId = tool_call.id;
+
+                            if (tool_fun) {
+                              const toolName = tool_fun?.name;
+                              const toolInput = tool_fun?.arguments;
+
+                              console.log(`[Chat Agent] 调用工具: ${toolName}, toolInput: ${toolInput}`);
+                              // dataStream.write({
+                              //   id: outMessageId,
+                              //   type: `tool-${toolName}`,
+                              //   delta: {
+                              //     toolCallId: toolCallId,
+                              //   },
+                              //   state: 'input-available',
+                              // });
+
+                            }
+                          }
+                        } // end of tool_calls
+                      } // end of 'msg_type === AIMessageChunk and additional_kwargs'
+                    } // end of msg_type === AIMessageChunk
+
+                    // 工具执行完成，返回
+                    if (msg_type == "tool") {
+                      const toolName = messageChunk?.name;
+                      const toolResult = messageChunk?.content;
+                      const toolCallId = messageChunk?.id;
+                      console.log(`[Chat Agent] Tool "${toolName}" 调用完成, 结果: ${toolResult}, toolCallId: ${toolCallId}`);
+                      let parsedOutput;
+                      if (typeof toolResult === 'string') {
+                        try {
+                          parsedOutput = JSON.parse(toolResult);
+                        } catch (e) {
+                          console.warn(e)
+                        }
+                      } else {
+                        parsedOutput = toolResult;
+                      }
+                      console.log(`parsedOutput: ${JSON.stringify(parsedOutput)}`)
+                      if (parsedOutput !== undefined) {
+                        // 发送工具输出可用事件
+                        // dataStream.write({
+                        //   id: outMessageId,
+                        //   type: 'tool-getWeather',
+                        //   delta: {
+                        //     toolCallId: toolCallId,
+                        //     output: parsedOutput,
+                        //   },
+                        //   state: 'output-available',
+                        // });
+                        console.log(`[Caht Agent] Tool call end: ${JSON.stringify(messageChunk, null, 4)}`)
+                      }
+                    } // end of msg_type === "tool"
+                  } // end of data is array instance
                 }
 
                 if ("end" === event) {
                   dataStream.write({ id: outMessageId, type: 'text-end' });
+                  console.log(`text-end`)
                   dataStream.write({ type: 'finish-step' });
+                  console.log(`finish-step`)
                   dataStream.write({ type: 'finish' });
+                  console.log(`finish`)
                 }
               }
             }
