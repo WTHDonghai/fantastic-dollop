@@ -21,7 +21,6 @@ import { generateTitleFromUserMessage } from '../../actions';
 import { createDocument } from '@/lib/ai/tools/create-document';
 import { updateDocument } from '@/lib/ai/tools/update-document';
 import { requestSuggestions } from '@/lib/ai/tools/request-suggestions';
-import { getWeather } from '@/lib/ai/tools/get-weather';
 import { isProductionEnvironment, isTestEnvironment } from '@/lib/constants';
 
 import { entitlementsByUserType } from '@/lib/ai/entitlements';
@@ -267,22 +266,22 @@ export async function POST(request: Request) {
 
                           for (const tool_call of tool_calls) {
                             const tool_fun = tool_call?.function
-                            const toolCallId = tool_call.id;
+                            const toolCallId: string = tool_call.id;
 
                             if (tool_fun) {
-                              const toolName = tool_fun?.name;
+                              const toolName: string = tool_fun?.name;
                               const toolInput = tool_fun?.arguments;
 
-                              console.log(`[Chat Agent] 调用工具: ${toolName}, toolInput: ${toolInput}`);
-                              // dataStream.write({
-                              //   id: outMessageId,
-                              //   type: `tool-${toolName}`,
-                              //   delta: {
-                              //     toolCallId: toolCallId,
-                              //   },
-                              //   state: 'input-available',
-                              // });
+                              console.log(`[Chat Agent] 调用工具: ${toolName}, toolId: ${toolCallId}, toolInput: ${toolInput}`);
 
+                              // 发送工具调用开始事件 - 使用正确的消息格式
+                              dataStream.write({
+                                type: 'tool-input-available',
+                                toolCallId: toolCallId,
+                                toolName: toolName,
+                                input: toolInput,
+                                providerExecuted: true,
+                              })
                             }
                           }
                         } // end of tool_calls
@@ -291,9 +290,9 @@ export async function POST(request: Request) {
 
                     // 工具执行完成，返回
                     if (msg_type == "tool") {
-                      const toolName = messageChunk?.name;
+                      const toolName: string = messageChunk?.name;
                       const toolResult = messageChunk?.content;
-                      const toolCallId = messageChunk?.id;
+                      const toolCallId = messageChunk?.tool_call_id;
                       console.log(`[Chat Agent] Tool "${toolName}" 调用完成, 结果: ${toolResult}, toolCallId: ${toolCallId}`);
                       let parsedOutput;
                       if (typeof toolResult === 'string') {
@@ -305,19 +304,16 @@ export async function POST(request: Request) {
                       } else {
                         parsedOutput = toolResult;
                       }
-                      console.log(`parsedOutput: ${JSON.stringify(parsedOutput)}`)
+                      console.log(`parsedOutput: ${JSON.stringify(parsedOutput)}`);
                       if (parsedOutput !== undefined) {
                         // 发送工具输出可用事件
-                        // dataStream.write({
-                        //   id: outMessageId,
-                        //   type: 'tool-getWeather',
-                        //   delta: {
-                        //     toolCallId: toolCallId,
-                        //     output: parsedOutput,
-                        //   },
-                        //   state: 'output-available',
-                        // });
-                        console.log(`[Caht Agent] Tool call end: ${JSON.stringify(messageChunk, null, 4)}`)
+                        console.log(`[Caht Agent] Tool call end: ${JSON.stringify(messageChunk, null, 4)}`);
+                        dataStream.write({
+                          type: 'tool-output-available',
+                          toolCallId: toolCallId,
+                          providerExecuted: true,
+                          output: parsedOutput,
+                        });
                       }
                     } // end of msg_type === "tool"
                   } // end of data is array instance
