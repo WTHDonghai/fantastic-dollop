@@ -109,8 +109,9 @@ export function convertToUIMessages(messages: DBMessage[]): ChatMessage[] {
 }
 
 export function getTextFromMessage(message: ChatMessage): string {
-  return message.parts
-    .filter((part) => part.type === 'text')
-    .map((part) => part.text)
+  const parts = Array.isArray(message.parts) ? message.parts : [];
+  return parts
+    .filter((part: any) => part && part.type === 'text' && typeof part.text === 'string')
+    .map((part: any) => part.text as string)
     .join('');
 }

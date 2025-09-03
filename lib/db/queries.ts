@@ -80,6 +80,11 @@ export async function createGuestUser() {
   }
 }
 
+/**
+ * 保存一条 Chat 记录并返回插入后的完整记录。
+ * - 使用 Postgres 的 returning() 返回插入行，避免仅返回插入结果元信息。
+ * - 返回单个 Chat 对象，便于调用方直接访问 chat.title 等字段。
+ */
 export async function saveChat({
   id,
   userId,
@@ -90,17 +95,35 @@ export async function saveChat({
   userId: string;
   title: string;
   visibility: VisibilityType;
-}) {
+}): Promise<Chat> {
   try {
-    return await db.insert(chat).values({
-      id,
-      createdAt: new Date(),
-      userId,
-      title,
-      visibility,
+    const [inserted] = await db
+      .insert(chat)
+      .values({
+        id,
+        createdAt: new Date(),
+        userId,
+        title,
+        visibility,
+      })
+      .returning();
+
+    return inserted;
+  } catch (error: any) {
+    // 增强日志：帮助定位数据库写入失败（例如外键约束）
+    console.error('[db] saveChat failed', {
+      message: error?.message,
+      code: error?.code,
+      detail: error?.detail,
+      schema: error?.schema,
+      table: error?.table,
+      constraint: error?.constraint,
     });
-  } catch (error) {
-    throw new ChatSDKError('bad_request:database', 'Failed to save chat');
+    const cause =
+      error?.code === '23503'
+        ? `Failed to save chat: foreign key violation for userId (${error?.detail || 'related User not found'})`
+        : `Failed to save chat: ${error?.message || 'unknown database error'}`;
+    throw new ChatSDKError('bad_request:database', cause);
   }
 }
 

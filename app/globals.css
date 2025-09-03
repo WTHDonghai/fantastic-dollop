@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Using system fonts instead of external fonts */
+
 :root {
     --foreground-rgb: 0, 0, 0;
     --background-start-rgb: 214, 219, 220;

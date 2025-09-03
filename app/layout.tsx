@@ -1,6 +1,5 @@
 import { Toaster } from 'sonner';
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 
 import './globals.css';
@@ -16,17 +15,15 @@ export const viewport = {
   maximumScale: 1, // Disable auto-zoom on mobile Safari
 };
 
-const geist = Geist({
-  subsets: ['latin'],
-  display: 'swap',
+const geist = {
   variable: '--font-geist',
-});
+  font: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+};
 
-const geistMono = Geist_Mono({
-  subsets: ['latin'],
-  display: 'swap',
+const geistMono = {
   variable: '--font-geist-mono',
-});
+  font: '"SF Mono", Monaco, "Cascadia Code", "Roboto Mono", monospace',
+};
 
 const LIGHT_THEME_COLOR = 'hsl(0 0% 100%)';
 const DARK_THEME_COLOR = 'hsl(240deg 10% 3.92%)';
