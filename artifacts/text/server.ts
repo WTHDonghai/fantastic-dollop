@@ -1,5 +1,5 @@
-import { smoothStream } from 'ai';
-import { Client } from '@langchain/langgraph-sdk';
+import { smoothStream, streamText } from 'ai';
+import { myProvider } from '@/lib/ai/providers';
 import { createDocumentHandler } from '@/lib/artifacts/server';
 import { updateDocumentPrompt } from '@/lib/ai/prompts';
 
@@ -8,69 +8,28 @@ export const textDocumentHandler = createDocumentHandler<'text'>({
   onCreateDocument: async ({ title, dataStream }) => {
     let draftContent = '';
 
-    // 创建 LangGraph 客户端
-    const client = new Client({
-      apiUrl: process.env.LANGGRAPH_API_URL || 'http://localhost:8000/api',
+    const { fullStream } = streamText({
+      model: myProvider.languageModel('artifact-model'),
+      system:
+        'Write about the given topic. Markdown is supported. Use headings wherever appropriate.',
+      experimental_transform: smoothStream({ chunking: 'word' }),
+      prompt: title,
     });
 
-    try {
-      // 创建 assistant
-      const assistant = await client.assistants.create({
-        graphId: "text-artifact-agent",
-        config: { 
-          "tags": ["text", "artifact"], 
-          "model": "openai/glm-4.5",
-          "system_prompt": "Write about the given topic. Markdown is supported. Use headings wherever appropriate."
-        },
-        ifExists: "do_nothing",
-      });
+    for await (const delta of fullStream) {
+      const { type } = delta;
 
-      // 创建线程
-      const thread = await client.threads.create();
+      if (type === 'text') {
+        const { text } = delta;
 
-      // 开始流式处理
-      const stream = await client.runs.stream(
-        thread.thread_id,
-        assistant.assistant_id,
-        {
-          config: assistant.config || {},
-          streamMode: ["values", "messages"],
-          input: {
-            messages: [{
-              role: 'user',
-              content: title
-            }],
-          },
-        }
-      );
+        draftContent += text;
 
-      // 处理流式响应
-      for await (const chunk of stream) {
-        if (chunk.event === "values" && chunk.data) {
-          const data = chunk.data as any;
-          
-          if (data.messages && Array.isArray(data.messages)) {
-            const lastMessage = data.messages[data.messages.length - 1];
-            if (lastMessage && lastMessage.role === 'assistant' && lastMessage.content) {
-              const text = lastMessage.content;
-              draftContent = text;
-              
-              dataStream.write({
-                type: 'data-textDelta',
-                data: text,
-                transient: true,
-              });
-            }
-          }
-        }
-        
-        if (chunk.event === "end") {
-          break;
-        }
+        dataStream.write({
+          type: 'data-textDelta',
+          data: text,
+          transient: true,
+        });
       }
-    } catch (error) {
-      console.error('[Text Artifact] 错误:', error);
-      throw error;
     }
 
     return draftContent;
@@ -78,69 +37,35 @@ export const textDocumentHandler = createDocumentHandler<'text'>({
   onUpdateDocument: async ({ document, description, dataStream }) => {
     let draftContent = '';
 
-    // 创建 LangGraph 客户端
-    const client = new Client({
-      apiUrl: process.env.LANGGRAPH_API_URL || 'http://localhost:8000/api',
+    const { fullStream } = streamText({
+      model: myProvider.languageModel('artifact-model'),
+      system: updateDocumentPrompt(document.content, 'text'),
+      experimental_transform: smoothStream({ chunking: 'word' }),
+      prompt: description,
+      providerOptions: {
+        openai: {
+          prediction: {
+            type: 'content',
+            content: document.content,
+          },
+        },
+      },
     });
 
-    try {
-      // 创建 assistant
-      const assistant = await client.assistants.create({
-        graphId: "text-artifact-agent",
-        config: { 
-          "tags": ["text", "artifact", "update"], 
-          "model": "openai/glm-4.5",
-          "system_prompt": updateDocumentPrompt(document.content, 'text')
-        },
-        ifExists: "do_nothing",
-      });
+    for await (const delta of fullStream) {
+      const { type } = delta;
 
-      // 创建线程
-      const thread = await client.threads.create();
+      if (type === 'text') {
+        const { text } = delta;
 
-      // 开始流式处理
-      const stream = await client.runs.stream(
-        thread.thread_id,
-        assistant.assistant_id,
-        {
-          config: assistant.config || {},
-          streamMode: ["values", "messages"],
-          input: {
-            messages: [{
-              role: 'user',
-              content: description
-            }],
-          },
-        }
-      );
+        draftContent += text;
 
-      // 处理流式响应
-      for await (const chunk of stream) {
-        if (chunk.event === "values" && chunk.data) {
-          const data = chunk.data as any;
-          
-          if (data.messages && Array.isArray(data.messages)) {
-            const lastMessage = data.messages[data.messages.length - 1];
-            if (lastMessage && lastMessage.role === 'assistant' && lastMessage.content) {
-              const text = lastMessage.content;
-              draftContent = text;
-              
-              dataStream.write({
-                type: 'data-textDelta',
-                data: text,
-                transient: true,
-              });
-            }
-          }
-        }
-        
-        if (chunk.event === "end") {
-          break;
-        }
+        dataStream.write({
+          type: 'data-textDelta',
+          data: text,
+          transient: true,
+        });
       }
-    } catch (error) {
-      console.error('[Text Artifact Update] 错误:', error);
-      throw error;
     }
 
     return draftContent;
