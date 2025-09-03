@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"name": "fantastic-dollop",
+			"path": "../../../.."
+		},
+		{
+			"name": "aegra",
+			"path": "../../../../../aegra"
+		}
+	],
+	"settings": {
+		"typescript.tsdk": "node_modules/typescript/lib"
+	}
+}

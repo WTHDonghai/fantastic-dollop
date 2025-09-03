@@ -5,9 +5,8 @@ import {
   smoothStream,
   stepCountIs,
 } from 'ai';
-import { Client, Thread } from '@langchain/langgraph-sdk';
 import { auth, type UserType } from '@/app/(auth)/auth';
-import { type RequestHints, systemPrompt } from '@/lib/ai/prompts';
+import { type RequestHints } from '@/lib/ai/prompts';
 import {
   createStreamId,
   deleteChatById,
@@ -17,7 +16,7 @@ import {
   saveChat,
   saveMessages,
 } from '@/lib/db/queries';
-import { convertToUIMessages, generateUUID, getTextFromMessage } from '@/lib/utils';
+import { convertToUIMessages, generateUUID } from '@/lib/utils';
 import { generateTitleFromUserMessage } from '../../actions';
 import { createDocument } from '@/lib/ai/tools/create-document';
 import { updateDocument } from '@/lib/ai/tools/update-document';
@@ -37,6 +36,7 @@ import { ChatSDKError } from '@/lib/errors';
 import type { ChatMessage } from '@/lib/types';
 import type { ChatModel } from '@/lib/ai/models';
 import type { VisibilityType } from '@/components/visibility-selector';
+import { getLangGraphMessageStream } from '@/lib/langgraph/chat';
 
 // 全局错误处理：捕获未处理的 Promise 拒绝和未捕获异常，便于定位 "reading 'text'" 的来源
 (() => {
@@ -85,19 +85,6 @@ export function getStreamContext() {
   return globalStreamContext;
 }
 
-// 识别测试用例中使用的固定提示词，以便在非生产环境下返回确定性的 SSE 输出
-// function getDeterministicReplyForPrompt(input: string): string | null {
-//   const map: Record<string, string> = {
-//     "Why is the sky blue?": "It's just blue duh!",
-//     "Why is grass green?": "It's just green duh!",
-//     "What are the advantages of using Next.js?": 'With Next.js, you can ship fast!',
-//     "Who painted this?": 'This painting is by Monet!',
-//     "What's the weather in sf?": 'The current temperature in San Francisco is 17°C.',
-//   };
-//   const key = (input || '').trim();
-//   return key in map ? map[key] : null;
-// }
-
 export async function POST(request: Request) {
   let requestBody: PostRequestBody;
 
@@ -121,34 +108,21 @@ export async function POST(request: Request) {
       selectedChatModel: ChatModel['id'];
       selectedVisibilityType: VisibilityType;
     } = requestBody;
-
-    console.log(`== chat id: ${id} ==`)
-
     const session = await auth();
-
-    // 创建 LangGraph 客户端
-    const client = new Client({
-      apiUrl: process.env.LANGGRAPH_API_URL || 'http://localhost:8000/api',
-    });
-
     if (!session?.user) {
       return new ChatSDKError('unauthorized:chat').toResponse();
     }
 
     const userType: UserType = session.user.type;
-
     const messageCount = await getMessageCountByUserId({
       id: session.user.id,
       differenceInHours: 24,
     });
-
     if (messageCount > entitlementsByUserType[userType].maxMessagesPerDay) {
       return new ChatSDKError('rate_limit:chat').toResponse();
     }
 
     let chat = await getChatById({ id });
-    let thread: Thread;
-
     if (!chat) {
       const { title } = await generateTitleFromUserMessage({
         message,
@@ -162,23 +136,14 @@ export async function POST(request: Request) {
       });
       console.log(`chat info: ${JSON.stringify(chat, null, 2)}`)
 
-      // 创建会话
-      thread = await client.threads.create({
-        threadId: id, // 直接使用 chat ID 作为 thread ID
-        metadata: {
-          tags: [{ "title": chat.title }] // 修正：使用 chat.title 而不是 process.title
-        },
-        ifExists: "do_nothing", // 如果 thread 已存在则不重新创建
-      });
-      console.log('[Chat Agent] Thread 创建成功:', {
-        thread_id: thread.thread_id
-      });
-
+      // 线程创建迁移到封装内部，去除以下代码：
+      // const thread = await client.threads.create({ ... })
     } else {
       if (chat.userId !== session.user.id) {
         return new ChatSDKError('forbidden:chat').toResponse();
       }
-      thread = await client.threads.get(id)
+      // 线程获取迁移到封装内部，去除以下代码：
+      // const thread = await client.threads.get(id)
     }
 
     const messagesFromDb = await getMessagesByChatId({ id });
@@ -210,28 +175,8 @@ export async function POST(request: Request) {
     const streamId = generateUUID();
     await createStreamId({ streamId, chatId: id });
 
-    console.log('[Chat Agent] LangGraph 客户端已创建，API URL:', process.env.LANGGRAPH_API_URL || 'http://localhost:8000/api');
-    // 创建或获取 assistant
-    const assistant = await client.assistants.create({
-      graphId: "agent",
-      config: {
-        "tags": ["chat"],
-        "model": selectedChatModel === 'chat-model-reasoning' ? "openai/glm-4.5" : "openai/glm-4.5",
-        "system_prompt": systemPrompt({ selectedChatModel, requestHints }),
-        "tools": selectedChatModel === 'chat-model-reasoning' ? [] : [
-          'getWeather',
-          'createDocument',
-          'updateDocument',
-          'requestSuggestions'
-        ]
-      },
-      ifExists: "do_nothing",
-    });
-
-    console.log('[Chat Agent] Assistant 创建成功:', {
-      assistant_id: assistant.assistant_id,
-      config: assistant.config
-    });
+    // 助手创建迁移到封装内部
+    // const assistant = await client.assistants.create({ ... })
 
     // 安全构造仅文本内容的消息，避免访问未定义的 part.text
     const userParts = Array.isArray(message.parts) ? message.parts : [];
@@ -261,42 +206,21 @@ export async function POST(request: Request) {
           // 开始流式处理
           console.log('[Chat Agent] 开始流式处理...');
 
-          // 在测试环境，或在非生产环境且命中已知测试提示词时，直接返回固定的预期 SSE 事件序列
-          // const deterministic = getDeterministicReplyForPrompt(userText);
-          // if (isTestEnvironment || (!isProductionEnvironment && deterministic)) {
-          //   const reply = deterministic ?? 'Unknown test prompt!';
-          //   const outMessageId = generateUUID();
-          //   dataStream.write({ type: 'start-step' });
-          //   dataStream.write({ type: 'text-start', id: outMessageId });
-          //   reply.split(' ').forEach((word) => {
-          //     const delta = (word ?? '').length ? `${word} ` : ' ';
-          //     dataStream.write({ type: 'text-delta', id: outMessageId, delta });
-          //   });
-          //   dataStream.write({ type: 'text-end', id: outMessageId });
-          //   dataStream.write({ type: 'finish-step' });
-          //   dataStream.write({ type: 'finish' });
-          //   return;
-          // }
-
-          console.log('[Chat Agent] 即将调用 runs.stream ...');
-          let stream: AsyncIterable<any> | null = null;
+          console.log('[Chat Agent] 即将调用 getLangGraphMessageStream ...');
+          let lgStream: AsyncIterable<any> | null = null;
           try {
-            stream = await client.runs.stream(
-              thread.thread_id,
-              assistant.assistant_id,
-              {
-                config: assistant.config || {},
-                streamMode: ["messages"],
-                input: {
-                  messages: simpleMessages,
-                }
-              }
-            );
+            lgStream = await getLangGraphMessageStream({
+              threadId: id,
+              selectedChatModel,
+              requestHints,
+              simpleMessages,
+              title: chat?.title,
+            });
           } catch (e: any) {
-            console.error('[Chat Agent] runs.stream 调用失败', { message: e?.message, stack: e?.stack, error: e });
+            console.error('[Chat Agent] getLangGraphMessageStream 调用失败', { message: e?.message, stack: e?.stack, error: e });
             throw e;
           }
-          console.log('[Chat Agent] runs.stream 已返回，开始消费事件...');
+          console.log('[Chat Agent] LangGraph 消息流已返回，开始消费事件...');
 
           let eventCount = 0;
           // 同一条助手消息使用稳定的 ID，避免 UIMessageStream 关联失败
@@ -304,7 +228,7 @@ export async function POST(request: Request) {
 
           // 处理流式响应
           try {
-            for await (const chunk of stream as AsyncIterable<any>) {
+            for await (const chunk of lgStream as AsyncIterable<any>) {
               eventCount++;
 
               if (eventCount === 1) {
@@ -341,7 +265,6 @@ export async function POST(request: Request) {
                     }
 
                     if (text && text.length) {
-                      // console.log(`[Chat Agent] 输出文本增量, text-delta: "${text}"`);
                       dataStream.write({ id: outMessageId, type: 'text-delta', delta: text });
                     }
                   }
@@ -385,7 +308,6 @@ export async function POST(request: Request) {
                 }
               }
             }
-            // 为流式处理的内层 try 块补充 catch，避免语法错误并输出详细日志
           } catch (err: any) {
             console.error('[Chat Agent] 流式响应处理失败', {
               message: err?.message,

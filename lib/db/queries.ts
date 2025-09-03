@@ -109,8 +109,21 @@ export async function saveChat({
       .returning();
 
     return inserted;
-  } catch (error) {
-    throw new ChatSDKError('bad_request:database', 'Failed to save chat');
+  } catch (error: any) {
+    // 增强日志：帮助定位数据库写入失败（例如外键约束）
+    console.error('[db] saveChat failed', {
+      message: error?.message,
+      code: error?.code,
+      detail: error?.detail,
+      schema: error?.schema,
+      table: error?.table,
+      constraint: error?.constraint,
+    });
+    const cause =
+      error?.code === '23503'
+        ? `Failed to save chat: foreign key violation for userId (${error?.detail || 'related User not found'})`
+        : `Failed to save chat: ${error?.message || 'unknown database error'}`;
+    throw new ChatSDKError('bad_request:database', cause);
   }
 }
 
