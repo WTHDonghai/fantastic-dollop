@@ -48,7 +48,7 @@ export async function getLangGraphMessageStream(params: {
     graphId: 'agent',
     config: {
       tags: ['chat'],
-      model: selectedChatModel === 'chat-model-reasoning' ? 'openai/glm-4.5' : 'openai/glm-4.5',
+      model: selectedChatModel === 'chat-model-reasoning' ? 'openai/qwen-plus' : 'openai/qwen-plus',
       system_prompt: systemPrompt({ selectedChatModel, requestHints }),
       tools: selectedChatModel === 'chat-model-reasoning' ? [] : [
         'getWeather',

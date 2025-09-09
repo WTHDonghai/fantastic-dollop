@@ -342,7 +342,7 @@ export async function getDocumentsById({ id }: { id: string }) {
   } catch (error) {
     throw new ChatSDKError(
       'bad_request:database',
-      'Failed to get documents by id',
+      `Failed to get documents by id: ${id}`,
     );
   }
 }

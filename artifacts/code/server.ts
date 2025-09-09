@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { Client } from '@langchain/langgraph-sdk';
+import { streamObject } from 'ai';
+import { myProvider } from '@/lib/ai/providers';
 import { codePrompt, updateDocumentPrompt } from '@/lib/ai/prompts';
 import { createDocumentHandler } from '@/lib/artifacts/server';
 
@@ -8,69 +9,32 @@ export const codeDocumentHandler = createDocumentHandler<'code'>({
   onCreateDocument: async ({ title, dataStream }) => {
     let draftContent = '';
 
-    // 创建 LangGraph 客户端
-    const client = new Client({
-      apiUrl: process.env.LANGGRAPH_API_URL || 'http://localhost:8000/api',
+    const { fullStream } = streamObject({
+      model: myProvider.languageModel('artifact-model'),
+      system: codePrompt,
+      prompt: title,
+      schema: z.object({
+        code: z.string(),
+      }),
     });
 
-    try {
-      // 创建 assistant
-      const assistant = await client.assistants.create({
-        graphId: "code-artifact-agent",
-        config: { 
-          "tags": ["code", "artifact"], 
-          "model": "openai/glm-4.5",
-          "system_prompt": codePrompt
-        },
-        ifExists: "do_nothing",
-      });
+    for await (const delta of fullStream) {
+      const { type } = delta;
 
-      // 创建线程
-      const thread = await client.threads.create();
+      if (type === 'object') {
+        const { object } = delta;
+        const { code } = object;
 
-      // 开始流式处理
-      const stream = await client.runs.stream(
-        thread.thread_id,
-        assistant.assistant_id,
-        {
-          config: assistant.config || {},
-          streamMode: ["values", "messages"],
-          input: {
-            messages: [{
-              role: 'user',
-              content: title
-            }],
-          },
-        }
-      );
+        if (code) {
+          dataStream.write({
+            type: 'data-codeDelta',
+            data: code ?? '',
+            transient: true,
+          });
 
-      // 处理流式响应
-      for await (const chunk of stream) {
-        if (chunk.event === "values" && chunk.data) {
-          const data = chunk.data as any;
-          
-          if (data.messages && Array.isArray(data.messages)) {
-            const lastMessage = data.messages[data.messages.length - 1];
-            if (lastMessage && lastMessage.role === 'assistant' && lastMessage.content) {
-              const code = lastMessage.content;
-              draftContent = code;
-              
-              dataStream.write({
-                type: 'data-codeDelta',
-                data: code ?? '',
-                transient: true,
-              });
-            }
-          }
-        }
-        
-        if (chunk.event === "end") {
-          break;
+          draftContent = code;
         }
       }
-    } catch (error) {
-      console.error('[Code Artifact] 错误:', error);
-      throw error;
     }
 
     return draftContent;
@@ -78,69 +42,32 @@ export const codeDocumentHandler = createDocumentHandler<'code'>({
   onUpdateDocument: async ({ document, description, dataStream }) => {
     let draftContent = '';
 
-    // 创建 LangGraph 客户端
-    const client = new Client({
-      apiUrl: process.env.LANGGRAPH_API_URL || 'http://localhost:8000/api',
+    const { fullStream } = streamObject({
+      model: myProvider.languageModel('artifact-model'),
+      system: updateDocumentPrompt(document.content, 'code'),
+      prompt: description,
+      schema: z.object({
+        code: z.string(),
+      }),
     });
 
-    try {
-      // 创建 assistant
-      const assistant = await client.assistants.create({
-        graphId: "code-artifact-agent",
-        config: { 
-          "tags": ["code", "artifact", "update"], 
-          "model": "openai/glm-4.5",
-          "system_prompt": updateDocumentPrompt(document.content, 'code')
-        },
-        ifExists: "do_nothing",
-      });
+    for await (const delta of fullStream) {
+      const { type } = delta;
 
-      // 创建线程
-      const thread = await client.threads.create();
+      if (type === 'object') {
+        const { object } = delta;
+        const { code } = object;
 
-      // 开始流式处理
-      const stream = await client.runs.stream(
-        thread.thread_id,
-        assistant.assistant_id,
-        {
-          config: assistant.config || {},
-          streamMode: ["values", "messages"],
-          input: {
-            messages: [{
-              role: 'user',
-              content: description
-            }],
-          },
-        }
-      );
+        if (code) {
+          dataStream.write({
+            type: 'data-codeDelta',
+            data: code ?? '',
+            transient: true,
+          });
 
-      // 处理流式响应
-      for await (const chunk of stream) {
-        if (chunk.event === "values" && chunk.data) {
-          const data = chunk.data as any;
-          
-          if (data.messages && Array.isArray(data.messages)) {
-            const lastMessage = data.messages[data.messages.length - 1];
-            if (lastMessage && lastMessage.role === 'assistant' && lastMessage.content) {
-              const code = lastMessage.content;
-              draftContent = code;
-              
-              dataStream.write({
-                type: 'data-codeDelta',
-                data: code ?? '',
-                transient: true,
-              });
-            }
-          }
-        }
-        
-        if (chunk.event === "end") {
-          break;
+          draftContent = code;
         }
       }
-    } catch (error) {
-      console.error('[Code Artifact Update] 错误:', error);
-      throw error;
     }
 
     return draftContent;

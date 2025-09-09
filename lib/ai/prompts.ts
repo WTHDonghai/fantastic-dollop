@@ -62,6 +62,7 @@ export const systemPrompt = ({
   if (selectedChatModel === 'chat-model-reasoning') {
     return `${regularPrompt}\n\n${requestPrompt}`;
   } else {
+    console.log(`== No chat-model-reasoning Prompt == `)
     return `${regularPrompt}\n\n${requestPrompt}\n\n${artifactsPrompt}`;
   }
 };

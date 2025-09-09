@@ -47,7 +47,7 @@ export const requestSuggestions = ({
           graphId: "suggestions-agent",
           config: { 
             "tags": ["suggestions", "writing"], 
-            "model": "openai/glm-4.5",
+            "model": "openai/qwen-plus",
             "system_prompt": "You are a help writing assistant. Given a piece of writing, please offer suggestions to improve the piece of writing and describe the change. It is very important for the edits to contain full sentences instead of just words. Max 5 suggestions. Return your response as a JSON array with objects containing originalSentence, suggestedSentence, and description fields."
           },
           ifExists: "do_nothing",

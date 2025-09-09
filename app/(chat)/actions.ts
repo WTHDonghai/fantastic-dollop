@@ -27,7 +27,7 @@ export async function generateTitleFromUserMessage({
   message: UIMessage;
 }) {
   console.log('[Title Agent] 开始生成标题，输入消息:', JSON.stringify(message, null, 2));
-  
+
   const client = new Client({
     apiUrl: process.env.LANGGRAPH_API_URL || 'http://localhost:8000/api',
   });
@@ -36,7 +36,7 @@ export async function generateTitleFromUserMessage({
   try {
     const assistant = await client.assistants.create({
       graphId: "title-agent",
-      config: { "tags": ["title"], "model": "openai/glm-4.5" },
+      config: { "tags": ["title"], },
       ifExists: "do_nothing",
     });
     console.log('[Title Agent] Assistant 创建成功:', {
@@ -64,7 +64,11 @@ export async function generateTitleFromUserMessage({
       thread.thread_id,
       assistant.assistant_id,
       {
-        config: assistant.config || {},
+        config: {
+          "configurable": {
+            "model": "openai/qwen-turbo"
+          }
+        },
         streamMode: ["values"],
         input: {
           messages: inputMessages,
@@ -75,7 +79,7 @@ export async function generateTitleFromUserMessage({
     let title = '';
     let completed = false;
     let eventCount = 0;
-    
+
     for await (const chunk of stream) {
       eventCount++;
       // console.log(`[Title Agent] 事件 #${eventCount}:`, {
@@ -83,7 +87,7 @@ export async function generateTitleFromUserMessage({
       //   data_type: typeof (chunk as any).data,
       //   data_preview: (chunk as any).data ? `${JSON.stringify((chunk as any).data).substring(0, 200)}...` : null
       // });
-      
+
       // 处理 values 事件获取 title
       if ((chunk as any).event === "values" && (chunk as any).data) {
         const data = (chunk as any).data as any;
@@ -109,7 +113,7 @@ export async function generateTitleFromUserMessage({
     const result = { title, threadId: thread.thread_id };
     console.log('[Title Agent] 最终结果:', result);
     return result;
-    
+
   } catch (error) {
     console.error('[Title Agent] 错误:', {
       message: (error as Error).message,

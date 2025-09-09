@@ -210,6 +210,7 @@ export async function POST(request: Request) {
           let eventCount = 0;
           // 同一条助手消息使用稳定的 ID，避免 UIMessageStream 关联失败
           const outMessageId = generateUUID();
+          const toolCallMappings:Map<string,any> = new Map<string, any>(); // toolCallId: obj
 
           // 处理流式响应
           try {
@@ -225,6 +226,9 @@ export async function POST(request: Request) {
               if (chunk.data) {
                 const data = chunk.data as any;
                 const event = chunk.event;
+
+                if ("values" === event) {
+                }
 
                 if ("messages" === event) {
                   // 处理消息内容
@@ -266,7 +270,7 @@ export async function POST(request: Request) {
 
                           for (const tool_call of tool_calls) {
                             const tool_fun = tool_call?.function
-                            const toolCallId: string = tool_call.id;
+                            const toolCallId: string = tool_call.id
 
                             if (tool_fun) {
                               const toolName: string = tool_fun?.name;
@@ -279,9 +283,56 @@ export async function POST(request: Request) {
                                 type: 'tool-input-available',
                                 toolCallId: toolCallId,
                                 toolName: toolName,
-                                input: toolInput,
-                                providerExecuted: true,
+                                input: toolInput
                               })
+
+                              console.log(`== > parsedInput: ${toolInput} ==`)
+                              let parsedInput;
+                              if(typeof toolInput === 'string') {
+                                  parsedInput = JSON.parse(toolInput);
+                              } else {
+                                parsedInput = toolInput
+                              }
+                              console.log(`title: ${parsedInput.title}, kind: ${parsedInput.kind}, id: ${parsedInput.id}`)
+                              // [TODO]: 调用具体的工具
+                              if (parsedInput?.title && parsedInput?.kind) {
+                                if (toolName === "createDocument") {
+                                  const documentId = generateUUID();
+                                  const createDoc = createDocument({
+                                    id: documentId,
+                                    dataStream,
+                                    session,
+                                  });
+                                  if(documentId) {
+                                    toolCallMappings.set(toolCallId, { id: documentId });
+                                    const documentToolCallInfo = toolCallMappings.get(toolCallId)
+                                    console.log(`documentToolCallInfo: ${JSON.stringify(documentToolCallInfo)}`);
+                                  }
+                                  const result = await createDoc.execute({
+                                    title: parsedInput.title,
+                                    kind: parsedInput.kind,
+                                  })
+                                  console.log(`[Chat Agent] Document created: ${JSON.stringify(result)}`);
+                                } 
+                                // else if (toolName === "updateDocument" && toolInput.id) {
+                                //   await updateDocument({
+                                //     id: toolInput.id,
+                                //     title: toolInput.title,
+                                //     dataStream,
+                                //     session,
+                                //   });
+                                //   console.log(`[Chat Agent] Document updated: ${parsedOutput.data.id}`);
+                                // } 
+                                // else if (toolName === "requestSuggestions") {
+                                //   const suggestions = await requestSuggestions({
+                                //     title: parsedOutput.data.title,
+                                //     chatId: id,
+                                //     userId: session.user.id,
+                                //   });
+                                //   console.log(`[Chat Agent] Suggestions requested: ${JSON.stringify(suggestions)}`);
+                                // }
+                              } // if (toolInput?.title && toolInput?.kind) {
+
                             }
                           }
                         } // end of tool_calls
@@ -307,12 +358,23 @@ export async function POST(request: Request) {
                       console.log(`parsedOutput: ${JSON.stringify(parsedOutput)}`);
                       if (parsedOutput !== undefined) {
                         // 发送工具输出可用事件
+                        const documentToolCallInfo = toolCallMappings.get(toolCallId);
+                        console.log(`documentToolCallInfo: ${JSON.stringify(documentToolCallInfo)}`);
+                        let documentId;
+                        if(documentToolCallInfo) {
+                          documentId = documentToolCallInfo.id
+                          toolCallMappings.delete(toolCallId);
+                        }
                         console.log(`[Caht Agent] Tool call end: ${JSON.stringify(messageChunk, null, 4)}`);
                         dataStream.write({
                           type: 'tool-output-available',
                           toolCallId: toolCallId,
+                          // providerExecuted: parsedOutput.providerExecuted ?? true,
                           providerExecuted: true,
-                          output: parsedOutput,
+                          output: {
+                            ...parsedOutput.data,
+                            id:  documentId?? parsedOutput.data.id
+                          },
                         });
                       }
                     } // end of msg_type === "tool"

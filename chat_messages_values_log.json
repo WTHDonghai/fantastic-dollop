@@ -1,0 +1,1828 @@
+[
+  {
+    "#": 1,
+    "event": "values",
+    "data": {
+      "messages": [
+        {
+          "content": "San Francisco的天气怎么样？",
+          "additional_kwargs": {},
+          "response_metadata": {},
+          "type": "human",
+          "name": null,
+          "id": "6023d22b-df1a-4847-8830-4242fd898ec7",
+          "example": false
+        }
+      ]
+    }
+  },
+  {
+    "#": 2,
+    "event": "messages",
+    "data": [
+      {
+        "content": "",
+        "additional_kwargs": {
+          "tool_calls": [
+            {
+              "index": 0,
+              "id": "call_366dc41f4b1843f79ba5b8",
+              "function": {
+                "arguments": "{\"latitude\":",
+                "name": "getWeather"
+              },
+              "type": "function"
+            }
+          ]
+        },
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--3bcdb9fa-d74b-41c7-adba-d28ef163088f",
+        "example": false,
+        "tool_calls": [
+          {
+            "name": "getWeather",
+            "args": {},
+            "id": "call_366dc41f4b1843f79ba5b8",
+            "type": "tool_call"
+          }
+        ],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": [
+          {
+            "name": "getWeather",
+            "args": "{\"latitude\":",
+            "id": "call_366dc41f4b1843f79ba5b8",
+            "index": 0,
+            "type": "tool_call_chunk"
+          }
+        ]
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 1,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:4c19e4d9-4b19-b33c-b10f-9abb6fc03902",
+        "checkpoint_ns": "call_model:4c19e4d9-4b19-b33c-b10f-9abb6fc03902",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 3,
+    "event": "messages",
+    "data": [
+      {
+        "content": "",
+        "additional_kwargs": {
+          "tool_calls": [
+            {
+              "index": 0,
+              "id": "",
+              "function": {
+                "arguments": " 37.77",
+                "name": null
+              },
+              "type": "function"
+            }
+          ]
+        },
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--3bcdb9fa-d74b-41c7-adba-d28ef163088f",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [
+          {
+            "name": null,
+            "args": " 37.77",
+            "id": "",
+            "error": null,
+            "type": "invalid_tool_call"
+          }
+        ],
+        "usage_metadata": null,
+        "tool_call_chunks": [
+          {
+            "name": null,
+            "args": " 37.77",
+            "id": "",
+            "index": 0,
+            "type": "tool_call_chunk"
+          }
+        ]
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 1,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:4c19e4d9-4b19-b33c-b10f-9abb6fc03902",
+        "checkpoint_ns": "call_model:4c19e4d9-4b19-b33c-b10f-9abb6fc03902",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 4,
+    "event": "messages",
+    "data": [
+      {
+        "content": "",
+        "additional_kwargs": {
+          "tool_calls": [
+            {
+              "index": 0,
+              "id": "",
+              "function": {
+                "arguments": "49, \"longitude\":",
+                "name": null
+              },
+              "type": "function"
+            }
+          ]
+        },
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--3bcdb9fa-d74b-41c7-adba-d28ef163088f",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [
+          {
+            "name": null,
+            "args": "49, \"longitude\":",
+            "id": "",
+            "error": null,
+            "type": "invalid_tool_call"
+          }
+        ],
+        "usage_metadata": null,
+        "tool_call_chunks": [
+          {
+            "name": null,
+            "args": "49, \"longitude\":",
+            "id": "",
+            "index": 0,
+            "type": "tool_call_chunk"
+          }
+        ]
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 1,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:4c19e4d9-4b19-b33c-b10f-9abb6fc03902",
+        "checkpoint_ns": "call_model:4c19e4d9-4b19-b33c-b10f-9abb6fc03902",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 5,
+    "event": "messages",
+    "data": [
+      {
+        "content": "",
+        "additional_kwargs": {
+          "tool_calls": [
+            {
+              "index": 0,
+              "id": "",
+              "function": {
+                "arguments": " -122",
+                "name": null
+              },
+              "type": "function"
+            }
+          ]
+        },
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--3bcdb9fa-d74b-41c7-adba-d28ef163088f",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [
+          {
+            "name": null,
+            "args": " -122",
+            "id": "",
+            "error": null,
+            "type": "invalid_tool_call"
+          }
+        ],
+        "usage_metadata": null,
+        "tool_call_chunks": [
+          {
+            "name": null,
+            "args": " -122",
+            "id": "",
+            "index": 0,
+            "type": "tool_call_chunk"
+          }
+        ]
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 1,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:4c19e4d9-4b19-b33c-b10f-9abb6fc03902",
+        "checkpoint_ns": "call_model:4c19e4d9-4b19-b33c-b10f-9abb6fc03902",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 6,
+    "event": "messages",
+    "data": [
+      {
+        "content": "",
+        "additional_kwargs": {
+          "tool_calls": [
+            {
+              "index": 0,
+              "id": "",
+              "function": {
+                "arguments": ".4194}",
+                "name": null
+              },
+              "type": "function"
+            }
+          ]
+        },
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--3bcdb9fa-d74b-41c7-adba-d28ef163088f",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [
+          {
+            "name": null,
+            "args": ".4194}",
+            "id": "",
+            "error": null,
+            "type": "invalid_tool_call"
+          }
+        ],
+        "usage_metadata": null,
+        "tool_call_chunks": [
+          {
+            "name": null,
+            "args": ".4194}",
+            "id": "",
+            "index": 0,
+            "type": "tool_call_chunk"
+          }
+        ]
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 1,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:4c19e4d9-4b19-b33c-b10f-9abb6fc03902",
+        "checkpoint_ns": "call_model:4c19e4d9-4b19-b33c-b10f-9abb6fc03902",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 7,
+    "event": "messages",
+    "data": [
+      {
+        "content": "",
+        "additional_kwargs": {
+          "tool_calls": [
+            {
+              "index": 0,
+              "id": "",
+              "function": {
+                "arguments": null,
+                "name": null
+              },
+              "type": "function"
+            }
+          ]
+        },
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--3bcdb9fa-d74b-41c7-adba-d28ef163088f",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [
+          {
+            "name": null,
+            "args": null,
+            "id": "",
+            "error": null,
+            "type": "invalid_tool_call"
+          }
+        ],
+        "usage_metadata": null,
+        "tool_call_chunks": [
+          {
+            "name": null,
+            "args": null,
+            "id": "",
+            "index": 0,
+            "type": "tool_call_chunk"
+          }
+        ]
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 1,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:4c19e4d9-4b19-b33c-b10f-9abb6fc03902",
+        "checkpoint_ns": "call_model:4c19e4d9-4b19-b33c-b10f-9abb6fc03902",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 8,
+    "event": "messages",
+    "data": [
+      {
+        "content": "",
+        "additional_kwargs": {},
+        "response_metadata": {
+          "finish_reason": "tool_calls",
+          "model_name": "qwen-plus"
+        },
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--3bcdb9fa-d74b-41c7-adba-d28ef163088f",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 1,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:4c19e4d9-4b19-b33c-b10f-9abb6fc03902",
+        "checkpoint_ns": "call_model:4c19e4d9-4b19-b33c-b10f-9abb6fc03902",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 9,
+    "event": "values",
+    "data": {
+      "messages": [
+        {
+          "content": "San Francisco的天气怎么样？",
+          "additional_kwargs": {},
+          "response_metadata": {},
+          "type": "human",
+          "name": null,
+          "id": "6023d22b-df1a-4847-8830-4242fd898ec7",
+          "example": false
+        },
+        {
+          "content": "",
+          "additional_kwargs": {
+            "tool_calls": [
+              {
+                "index": 0,
+                "id": "call_366dc41f4b1843f79ba5b8",
+                "function": {
+                  "arguments": "{\"latitude\": 37.7749, \"longitude\": -122.4194}",
+                  "name": "getWeather"
+                },
+                "type": "function"
+              }
+            ]
+          },
+          "response_metadata": {
+            "finish_reason": "tool_calls",
+            "model_name": "qwen-plus"
+          },
+          "type": "ai",
+          "name": null,
+          "id": "run--3bcdb9fa-d74b-41c7-adba-d28ef163088f",
+          "example": false,
+          "tool_calls": [
+            {
+              "name": "getWeather",
+              "args": {
+                "latitude": 37.7749,
+                "longitude": -122.4194
+              },
+              "id": "call_366dc41f4b1843f79ba5b8",
+              "type": "tool_call"
+            }
+          ],
+          "invalid_tool_calls": [],
+          "usage_metadata": null
+        }
+      ]
+    }
+  },
+  {
+    "#": 10,
+    "event": "messages",
+    "data": [
+      {
+        "content": "{\"data\": {\"latitude\": 37.763283, \"longitude\": -122.41286, \"generationtime_ms\": 0.1291036605834961, \"utc_offset_seconds\": -25200, \"timezone\": \"America/Los_Angeles\", \"timezone_abbreviation\": \"GMT-7\", \"elevation\": 18.0, \"current_units\": {\"time\": \"iso8601\", \"interval\": \"seconds\", \"temperature_2m\": \"°C\", \"relative_humidity_2m\": \"%\", \"apparent_temperature\": \"°C\", \"pressure_msl\": \"hPa\", \"cloud_cover\": \"%\", \"wind_speed_10m\": \"km/h\", \"wind_direction_10m\": \"°\"}, \"current\": {\"time\": \"2025-09-08T21:30\", \"interval\": 900, \"temperature_2m\": 17.9, \"relative_humidity_2m\": 93, \"apparent_temperature\": 18.0, \"pressure_msl\": 1016.6, \"cloud_cover\": 30, \"wind_speed_10m\": 15.5, \"wind_direction_10m\": 248}, \"hourly_units\": {\"time\": \"iso8601\", \"temperature_2m\": \"°C\"}, \"hourly\": {\"time\": [\"2025-09-08T00:00\", \"2025-09-08T01:00\", \"2025-09-08T02:00\", \"2025-09-08T03:00\", \"2025-09-08T04:00\", \"2025-09-08T05:00\", \"2025-09-08T06:00\", \"2025-09-08T07:00\", \"2025-09-08T08:00\", \"2025-09-08T09:00\", \"2025-09-08T10:00\", \"2025-09-08T11:00\", \"2025-09-08T12:00\", \"2025-09-08T13:00\", \"2025-09-08T14:00\", \"2025-09-08T15:00\", \"2025-09-08T16:00\", \"2025-09-08T17:00\", \"2025-09-08T18:00\", \"2025-09-08T19:00\", \"2025-09-08T20:00\", \"2025-09-08T21:00\", \"2025-09-08T22:00\", \"2025-09-08T23:00\", \"2025-09-09T00:00\", \"2025-09-09T01:00\", \"2025-09-09T02:00\", \"2025-09-09T03:00\", \"2025-09-09T04:00\", \"2025-09-09T05:00\", \"2025-09-09T06:00\", \"2025-09-09T07:00\", \"2025-09-09T08:00\", \"2025-09-09T09:00\", \"2025-09-09T10:00\", \"2025-09-09T11:00\", \"2025-09-09T12:00\", \"2025-09-09T13:00\", \"2025-09-09T14:00\", \"2025-09-09T15:00\", \"2025-09-09T16:00\", \"2025-09-09T17:00\", \"2025-09-09T18:00\", \"2025-09-09T19:00\", \"2025-09-09T20:00\", \"2025-09-09T21:00\", \"2025-09-09T22:00\", \"2025-09-09T23:00\", \"2025-09-10T00:00\", \"2025-09-10T01:00\", \"2025-09-10T02:00\", \"2025-09-10T03:00\", \"2025-09-10T04:00\", \"2025-09-10T05:00\", \"2025-09-10T06:00\", \"2025-09-10T07:00\", \"2025-09-10T08:00\", \"2025-09-10T09:00\", \"2025-09-10T10:00\", \"2025-09-10T11:00\", \"2025-09-10T12:00\", \"2025-09-10T13:00\", \"2025-09-10T14:00\", \"2025-09-10T15:00\", \"2025-09-10T16:00\", \"2025-09-10T17:00\", \"2025-09-10T18:00\", \"2025-09-10T19:00\", \"2025-09-10T20:00\", \"2025-09-10T21:00\", \"2025-09-10T22:00\", \"2025-09-10T23:00\", \"2025-09-11T00:00\", \"2025-09-11T01:00\", \"2025-09-11T02:00\", \"2025-09-11T03:00\", \"2025-09-11T04:00\", \"2025-09-11T05:00\", \"2025-09-11T06:00\", \"2025-09-11T07:00\", \"2025-09-11T08:00\", \"2025-09-11T09:00\", \"2025-09-11T10:00\", \"2025-09-11T11:00\", \"2025-09-11T12:00\", \"2025-09-11T13:00\", \"2025-09-11T14:00\", \"2025-09-11T15:00\", \"2025-09-11T16:00\", \"2025-09-11T17:00\", \"2025-09-11T18:00\", \"2025-09-11T19:00\", \"2025-09-11T20:00\", \"2025-09-11T21:00\", \"2025-09-11T22:00\", \"2025-09-11T23:00\", \"2025-09-12T00:00\", \"2025-09-12T01:00\", \"2025-09-12T02:00\", \"2025-09-12T03:00\", \"2025-09-12T04:00\", \"2025-09-12T05:00\", \"2025-09-12T06:00\", \"2025-09-12T07:00\", \"2025-09-12T08:00\", \"2025-09-12T09:00\", \"2025-09-12T10:00\", \"2025-09-12T11:00\", \"2025-09-12T12:00\", \"2025-09-12T13:00\", \"2025-09-12T14:00\", \"2025-09-12T15:00\", \"2025-09-12T16:00\", \"2025-09-12T17:00\", \"2025-09-12T18:00\", \"2025-09-12T19:00\", \"2025-09-12T20:00\", \"2025-09-12T21:00\", \"2025-09-12T22:00\", \"2025-09-12T23:00\"], \"temperature_2m\": [15.7, 15.1, 14.9, 15.3, 14.9, 14.5, 14.5, 15.4, 16.1, 17.4, 18.8, 19.6, 21.4, 22.4, 23.1, 23.7, 23.2, 22.7, 21.8, 21.4, 20.5, 18.8, 17.6, 17.3, 17.2, 16.9, 16.8, 16.9, 16.5, 16.4, 16.5, 16.8, 17.0, 17.9, 18.9, 18.8, 19.0, 19.8, 20.7, 21.2, 20.7, 19.2, 18.6, 17.8, 17.0, 16.8, 16.8, 16.6, 16.6, 16.6, 16.5, 15.9, 15.8, 15.5, 15.5, 15.8, 16.0, 16.3, 16.3, 16.7, 16.5, 16.7, 18.1, 18.7, 18.8, 16.7, 19.0, 18.3, 17.8, 17.7, 17.0, 16.4, 16.5, 16.5, 16.4, 16.2, 16.1, 16.1, 16.3, 16.5, 16.7, 16.9, 17.6, 18.5, 19.5, 20.1, 20.5, 20.4, 19.8, 19.0, 18.2, 17.4, 16.9, 16.6, 16.4, 16.4, 16.2, 16.1, 16.1, 16.1, 16.1, 16.2, 16.3, 16.4, 16.7, 17.1, 17.8, 18.9, 20.3, 20.8, 20.8, 20.2, 19.4, 18.9, 18.3, 17.5, 17.0, 16.8, 16.7, 16.5]}, \"daily_units\": {\"time\": \"iso8601\", \"sunrise\": \"iso8601\", \"sunset\": \"iso8601\"}, \"daily\": {\"time\": [\"2025-09-08\", \"2025-09-09\", \"2025-09-10\", \"2025-09-11\", \"2025-09-12\"], \"sunrise\": [\"2025-09-08T06:46\", \"2025-09-09T06:47\", \"2025-09-10T06:47\", \"2025-09-11T06:48\", \"2025-09-12T06:49\"], \"sunset\": [\"2025-09-08T19:28\", \"2025-09-09T19:26\", \"2025-09-10T19:25\", \"2025-09-11T19:23\", \"2025-09-12T19:21\"]}}, \"status\": \"success\", \"providerExecuted\": true}",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "tool",
+        "name": "getWeather",
+        "id": "5117eb0e-84e4-4ef9-a10c-48a3eb00a1f0",
+        "tool_call_id": "call_366dc41f4b1843f79ba5b8",
+        "artifact": null,
+        "status": "success"
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 2,
+        "langgraph_node": "tools",
+        "langgraph_triggers": [
+          "branch:to:tools"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "tools"
+        ],
+        "langgraph_checkpoint_ns": "tools:2f3d2519-43ca-8182-5410-bbac30e96f1b"
+      }
+    ]
+  },
+  {
+    "#": 11,
+    "event": "values",
+    "data": {
+      "messages": [
+        {
+          "content": "San Francisco的天气怎么样？",
+          "additional_kwargs": {},
+          "response_metadata": {},
+          "type": "human",
+          "name": null,
+          "id": "6023d22b-df1a-4847-8830-4242fd898ec7",
+          "example": false
+        },
+        {
+          "content": "",
+          "additional_kwargs": {
+            "tool_calls": [
+              {
+                "index": 0,
+                "id": "call_366dc41f4b1843f79ba5b8",
+                "function": {
+                  "arguments": "{\"latitude\": 37.7749, \"longitude\": -122.4194}",
+                  "name": "getWeather"
+                },
+                "type": "function"
+              }
+            ]
+          },
+          "response_metadata": {
+            "finish_reason": "tool_calls",
+            "model_name": "qwen-plus"
+          },
+          "type": "ai",
+          "name": null,
+          "id": "run--3bcdb9fa-d74b-41c7-adba-d28ef163088f",
+          "example": false,
+          "tool_calls": [
+            {
+              "name": "getWeather",
+              "args": {
+                "latitude": 37.7749,
+                "longitude": -122.4194
+              },
+              "id": "call_366dc41f4b1843f79ba5b8",
+              "type": "tool_call"
+            }
+          ],
+          "invalid_tool_calls": [],
+          "usage_metadata": null
+        },
+        {
+          "content": "{\"data\": {\"latitude\": 37.763283, \"longitude\": -122.41286, \"generationtime_ms\": 0.1291036605834961, \"utc_offset_seconds\": -25200, \"timezone\": \"America/Los_Angeles\", \"timezone_abbreviation\": \"GMT-7\", \"elevation\": 18.0, \"current_units\": {\"time\": \"iso8601\", \"interval\": \"seconds\", \"temperature_2m\": \"°C\", \"relative_humidity_2m\": \"%\", \"apparent_temperature\": \"°C\", \"pressure_msl\": \"hPa\", \"cloud_cover\": \"%\", \"wind_speed_10m\": \"km/h\", \"wind_direction_10m\": \"°\"}, \"current\": {\"time\": \"2025-09-08T21:30\", \"interval\": 900, \"temperature_2m\": 17.9, \"relative_humidity_2m\": 93, \"apparent_temperature\": 18.0, \"pressure_msl\": 1016.6, \"cloud_cover\": 30, \"wind_speed_10m\": 15.5, \"wind_direction_10m\": 248}, \"hourly_units\": {\"time\": \"iso8601\", \"temperature_2m\": \"°C\"}, \"hourly\": {\"time\": [\"2025-09-08T00:00\", \"2025-09-08T01:00\", \"2025-09-08T02:00\", \"2025-09-08T03:00\", \"2025-09-08T04:00\", \"2025-09-08T05:00\", \"2025-09-08T06:00\", \"2025-09-08T07:00\", \"2025-09-08T08:00\", \"2025-09-08T09:00\", \"2025-09-08T10:00\", \"2025-09-08T11:00\", \"2025-09-08T12:00\", \"2025-09-08T13:00\", \"2025-09-08T14:00\", \"2025-09-08T15:00\", \"2025-09-08T16:00\", \"2025-09-08T17:00\", \"2025-09-08T18:00\", \"2025-09-08T19:00\", \"2025-09-08T20:00\", \"2025-09-08T21:00\", \"2025-09-08T22:00\", \"2025-09-08T23:00\", \"2025-09-09T00:00\", \"2025-09-09T01:00\", \"2025-09-09T02:00\", \"2025-09-09T03:00\", \"2025-09-09T04:00\", \"2025-09-09T05:00\", \"2025-09-09T06:00\", \"2025-09-09T07:00\", \"2025-09-09T08:00\", \"2025-09-09T09:00\", \"2025-09-09T10:00\", \"2025-09-09T11:00\", \"2025-09-09T12:00\", \"2025-09-09T13:00\", \"2025-09-09T14:00\", \"2025-09-09T15:00\", \"2025-09-09T16:00\", \"2025-09-09T17:00\", \"2025-09-09T18:00\", \"2025-09-09T19:00\", \"2025-09-09T20:00\", \"2025-09-09T21:00\", \"2025-09-09T22:00\", \"2025-09-09T23:00\", \"2025-09-10T00:00\", \"2025-09-10T01:00\", \"2025-09-10T02:00\", \"2025-09-10T03:00\", \"2025-09-10T04:00\", \"2025-09-10T05:00\", \"2025-09-10T06:00\", \"2025-09-10T07:00\", \"2025-09-10T08:00\", \"2025-09-10T09:00\", \"2025-09-10T10:00\", \"2025-09-10T11:00\", \"2025-09-10T12:00\", \"2025-09-10T13:00\", \"2025-09-10T14:00\", \"2025-09-10T15:00\", \"2025-09-10T16:00\", \"2025-09-10T17:00\", \"2025-09-10T18:00\", \"2025-09-10T19:00\", \"2025-09-10T20:00\", \"2025-09-10T21:00\", \"2025-09-10T22:00\", \"2025-09-10T23:00\", \"2025-09-11T00:00\", \"2025-09-11T01:00\", \"2025-09-11T02:00\", \"2025-09-11T03:00\", \"2025-09-11T04:00\", \"2025-09-11T05:00\", \"2025-09-11T06:00\", \"2025-09-11T07:00\", \"2025-09-11T08:00\", \"2025-09-11T09:00\", \"2025-09-11T10:00\", \"2025-09-11T11:00\", \"2025-09-11T12:00\", \"2025-09-11T13:00\", \"2025-09-11T14:00\", \"2025-09-11T15:00\", \"2025-09-11T16:00\", \"2025-09-11T17:00\", \"2025-09-11T18:00\", \"2025-09-11T19:00\", \"2025-09-11T20:00\", \"2025-09-11T21:00\", \"2025-09-11T22:00\", \"2025-09-11T23:00\", \"2025-09-12T00:00\", \"2025-09-12T01:00\", \"2025-09-12T02:00\", \"2025-09-12T03:00\", \"2025-09-12T04:00\", \"2025-09-12T05:00\", \"2025-09-12T06:00\", \"2025-09-12T07:00\", \"2025-09-12T08:00\", \"2025-09-12T09:00\", \"2025-09-12T10:00\", \"2025-09-12T11:00\", \"2025-09-12T12:00\", \"2025-09-12T13:00\", \"2025-09-12T14:00\", \"2025-09-12T15:00\", \"2025-09-12T16:00\", \"2025-09-12T17:00\", \"2025-09-12T18:00\", \"2025-09-12T19:00\", \"2025-09-12T20:00\", \"2025-09-12T21:00\", \"2025-09-12T22:00\", \"2025-09-12T23:00\"], \"temperature_2m\": [15.7, 15.1, 14.9, 15.3, 14.9, 14.5, 14.5, 15.4, 16.1, 17.4, 18.8, 19.6, 21.4, 22.4, 23.1, 23.7, 23.2, 22.7, 21.8, 21.4, 20.5, 18.8, 17.6, 17.3, 17.2, 16.9, 16.8, 16.9, 16.5, 16.4, 16.5, 16.8, 17.0, 17.9, 18.9, 18.8, 19.0, 19.8, 20.7, 21.2, 20.7, 19.2, 18.6, 17.8, 17.0, 16.8, 16.8, 16.6, 16.6, 16.6, 16.5, 15.9, 15.8, 15.5, 15.5, 15.8, 16.0, 16.3, 16.3, 16.7, 16.5, 16.7, 18.1, 18.7, 18.8, 16.7, 19.0, 18.3, 17.8, 17.7, 17.0, 16.4, 16.5, 16.5, 16.4, 16.2, 16.1, 16.1, 16.3, 16.5, 16.7, 16.9, 17.6, 18.5, 19.5, 20.1, 20.5, 20.4, 19.8, 19.0, 18.2, 17.4, 16.9, 16.6, 16.4, 16.4, 16.2, 16.1, 16.1, 16.1, 16.1, 16.2, 16.3, 16.4, 16.7, 17.1, 17.8, 18.9, 20.3, 20.8, 20.8, 20.2, 19.4, 18.9, 18.3, 17.5, 17.0, 16.8, 16.7, 16.5]}, \"daily_units\": {\"time\": \"iso8601\", \"sunrise\": \"iso8601\", \"sunset\": \"iso8601\"}, \"daily\": {\"time\": [\"2025-09-08\", \"2025-09-09\", \"2025-09-10\", \"2025-09-11\", \"2025-09-12\"], \"sunrise\": [\"2025-09-08T06:46\", \"2025-09-09T06:47\", \"2025-09-10T06:47\", \"2025-09-11T06:48\", \"2025-09-12T06:49\"], \"sunset\": [\"2025-09-08T19:28\", \"2025-09-09T19:26\", \"2025-09-10T19:25\", \"2025-09-11T19:23\", \"2025-09-12T19:21\"]}}, \"status\": \"success\", \"providerExecuted\": true}",
+          "additional_kwargs": {},
+          "response_metadata": {},
+          "type": "tool",
+          "name": "getWeather",
+          "id": "5117eb0e-84e4-4ef9-a10c-48a3eb00a1f0",
+          "tool_call_id": "call_366dc41f4b1843f79ba5b8",
+          "artifact": null,
+          "status": "success"
+        }
+      ]
+    }
+  },
+  {
+    "#": 12,
+    "event": "messages",
+    "data": [
+      {
+        "content": "以下是",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 13,
+    "event": "messages",
+    "data": [
+      {
+        "content": "旧",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 14,
+    "event": "messages",
+    "data": [
+      {
+        "content": "金山 (",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 15,
+    "event": "messages",
+    "data": [
+      {
+        "content": "San Francisco",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 16,
+    "event": "messages",
+    "data": [
+      {
+        "content": ") 的当前天气",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 17,
+    "event": "messages",
+    "data": [
+      {
+        "content": "情况：\n\n- **当前",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 18,
+    "event": "messages",
+    "data": [
+      {
+        "content": "温度**: 17",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 19,
+    "event": "messages",
+    "data": [
+      {
+        "content": ".9°C\n",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 20,
+    "event": "messages",
+    "data": [
+      {
+        "content": "- **体感温度**:",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 21,
+    "event": "messages",
+    "data": [
+      {
+        "content": " 18.0",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 22,
+    "event": "messages",
+    "data": [
+      {
+        "content": "°C\n- **湿度",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 23,
+    "event": "messages",
+    "data": [
+      {
+        "content": "**: 93%\n",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 24,
+    "event": "messages",
+    "data": [
+      {
+        "content": "- **气压**: ",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 25,
+    "event": "messages",
+    "data": [
+      {
+        "content": "1016.6",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 26,
+    "event": "messages",
+    "data": [
+      {
+        "content": " hPa\n- **云",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 27,
+    "event": "messages",
+    "data": [
+      {
+        "content": "量**: 3",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 28,
+    "event": "messages",
+    "data": [
+      {
+        "content": "0%\n- **风速",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 29,
+    "event": "messages",
+    "data": [
+      {
+        "content": "**: 15.5",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 30,
+    "event": "messages",
+    "data": [
+      {
+        "content": " km/h\n- **风",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 31,
+    "event": "messages",
+    "data": [
+      {
+        "content": "向**: 24",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 32,
+    "event": "messages",
+    "data": [
+      {
+        "content": "8°\n\n如果",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 33,
+    "event": "messages",
+    "data": [
+      {
+        "content": "需要更多天气信息",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 34,
+    "event": "messages",
+    "data": [
+      {
+        "content": "，请告诉我！",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 35,
+    "event": "messages",
+    "data": [
+      {
+        "content": "",
+        "additional_kwargs": {},
+        "response_metadata": {
+          "finish_reason": "stop",
+          "model_name": "qwen-plus"
+        },
+        "type": "AIMessageChunk",
+        "name": null,
+        "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+        "example": false,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null,
+        "tool_call_chunks": []
+      },
+      {
+        "thread_id": "cd3471b2-78ef-4de2-8ed8-6e225a76e709",
+        "run_id": "4cebf59c-63d5-4e13-be00-0c06b1550046",
+        "user_id": "anonymous",
+        "user_display_name": "Anonymous User",
+        "model": "openai/qwen-plus",
+        "system_prompt": "You are a friendly assistant! Keep your responses concise and helpful.\n\nAbout the origin of user's request:\n- lat: undefined\n- lon: undefined\n- city: undefined\n- country: undefined\n\n\n\nArtifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the artifacts and visible to the user.\n\nWhen asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. ```python`code here```. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.\n\nDO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.\n\nThis is a guide for using artifacts tools: `createDocument` and `updateDocument`, which render content on a artifacts beside the conversation.\n\n**When to use `createDocument`:**\n- For substantial content (>10 lines) or code\n- For content users will likely save/reuse (emails, code, essays, etc.)\n- When explicitly requested to create a document\n- For when content contains a single code snippet\n\n**When NOT to use `createDocument`:**\n- For informational/explanatory content\n- For conversational responses\n- When asked to keep it in chat\n\n**Using `updateDocument`:**\n- Default to full document rewrites for major changes\n- Use targeted updates only for specific, isolated changes\n- Follow user instructions for which parts to modify\n\n**When NOT to use `updateDocument`:**\n- Immediately after creating a document\n\nDo not update document right after creating it. Wait for user feedback or request to update it.\n",
+        "langgraph_step": 3,
+        "langgraph_node": "call_model",
+        "langgraph_triggers": [
+          "branch:to:call_model"
+        ],
+        "langgraph_path": [
+          "__pregel_pull",
+          "call_model"
+        ],
+        "langgraph_checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "checkpoint_ns": "call_model:26ce4413-f91e-8547-6ab5-5d146f4eb4fa",
+        "ls_provider": "openai",
+        "ls_model_name": "qwen-plus",
+        "ls_model_type": "chat",
+        "ls_temperature": null,
+        "tags": [
+          "chat"
+        ]
+      }
+    ]
+  },
+  {
+    "#": 36,
+    "event": "values",
+    "data": {
+      "messages": [
+        {
+          "content": "San Francisco的天气怎么样？",
+          "additional_kwargs": {},
+          "response_metadata": {},
+          "type": "human",
+          "name": null,
+          "id": "6023d22b-df1a-4847-8830-4242fd898ec7",
+          "example": false
+        },
+        {
+          "content": "",
+          "additional_kwargs": {
+            "tool_calls": [
+              {
+                "index": 0,
+                "id": "call_366dc41f4b1843f79ba5b8",
+                "function": {
+                  "arguments": "{\"latitude\": 37.7749, \"longitude\": -122.4194}",
+                  "name": "getWeather"
+                },
+                "type": "function"
+              }
+            ]
+          },
+          "response_metadata": {
+            "finish_reason": "tool_calls",
+            "model_name": "qwen-plus"
+          },
+          "type": "ai",
+          "name": null,
+          "id": "run--3bcdb9fa-d74b-41c7-adba-d28ef163088f",
+          "example": false,
+          "tool_calls": [
+            {
+              "name": "getWeather",
+              "args": {
+                "latitude": 37.7749,
+                "longitude": -122.4194
+              },
+              "id": "call_366dc41f4b1843f79ba5b8",
+              "type": "tool_call"
+            }
+          ],
+          "invalid_tool_calls": [],
+          "usage_metadata": null
+        },
+        {
+          "content": "{\"data\": {\"latitude\": 37.763283, \"longitude\": -122.41286, \"generationtime_ms\": 0.1291036605834961, \"utc_offset_seconds\": -25200, \"timezone\": \"America/Los_Angeles\", \"timezone_abbreviation\": \"GMT-7\", \"elevation\": 18.0, \"current_units\": {\"time\": \"iso8601\", \"interval\": \"seconds\", \"temperature_2m\": \"°C\", \"relative_humidity_2m\": \"%\", \"apparent_temperature\": \"°C\", \"pressure_msl\": \"hPa\", \"cloud_cover\": \"%\", \"wind_speed_10m\": \"km/h\", \"wind_direction_10m\": \"°\"}, \"current\": {\"time\": \"2025-09-08T21:30\", \"interval\": 900, \"temperature_2m\": 17.9, \"relative_humidity_2m\": 93, \"apparent_temperature\": 18.0, \"pressure_msl\": 1016.6, \"cloud_cover\": 30, \"wind_speed_10m\": 15.5, \"wind_direction_10m\": 248}, \"hourly_units\": {\"time\": \"iso8601\", \"temperature_2m\": \"°C\"}, \"hourly\": {\"time\": [\"2025-09-08T00:00\", \"2025-09-08T01:00\", \"2025-09-08T02:00\", \"2025-09-08T03:00\", \"2025-09-08T04:00\", \"2025-09-08T05:00\", \"2025-09-08T06:00\", \"2025-09-08T07:00\", \"2025-09-08T08:00\", \"2025-09-08T09:00\", \"2025-09-08T10:00\", \"2025-09-08T11:00\", \"2025-09-08T12:00\", \"2025-09-08T13:00\", \"2025-09-08T14:00\", \"2025-09-08T15:00\", \"2025-09-08T16:00\", \"2025-09-08T17:00\", \"2025-09-08T18:00\", \"2025-09-08T19:00\", \"2025-09-08T20:00\", \"2025-09-08T21:00\", \"2025-09-08T22:00\", \"2025-09-08T23:00\", \"2025-09-09T00:00\", \"2025-09-09T01:00\", \"2025-09-09T02:00\", \"2025-09-09T03:00\", \"2025-09-09T04:00\", \"2025-09-09T05:00\", \"2025-09-09T06:00\", \"2025-09-09T07:00\", \"2025-09-09T08:00\", \"2025-09-09T09:00\", \"2025-09-09T10:00\", \"2025-09-09T11:00\", \"2025-09-09T12:00\", \"2025-09-09T13:00\", \"2025-09-09T14:00\", \"2025-09-09T15:00\", \"2025-09-09T16:00\", \"2025-09-09T17:00\", \"2025-09-09T18:00\", \"2025-09-09T19:00\", \"2025-09-09T20:00\", \"2025-09-09T21:00\", \"2025-09-09T22:00\", \"2025-09-09T23:00\", \"2025-09-10T00:00\", \"2025-09-10T01:00\", \"2025-09-10T02:00\", \"2025-09-10T03:00\", \"2025-09-10T04:00\", \"2025-09-10T05:00\", \"2025-09-10T06:00\", \"2025-09-10T07:00\", \"2025-09-10T08:00\", \"2025-09-10T09:00\", \"2025-09-10T10:00\", \"2025-09-10T11:00\", \"2025-09-10T12:00\", \"2025-09-10T13:00\", \"2025-09-10T14:00\", \"2025-09-10T15:00\", \"2025-09-10T16:00\", \"2025-09-10T17:00\", \"2025-09-10T18:00\", \"2025-09-10T19:00\", \"2025-09-10T20:00\", \"2025-09-10T21:00\", \"2025-09-10T22:00\", \"2025-09-10T23:00\", \"2025-09-11T00:00\", \"2025-09-11T01:00\", \"2025-09-11T02:00\", \"2025-09-11T03:00\", \"2025-09-11T04:00\", \"2025-09-11T05:00\", \"2025-09-11T06:00\", \"2025-09-11T07:00\", \"2025-09-11T08:00\", \"2025-09-11T09:00\", \"2025-09-11T10:00\", \"2025-09-11T11:00\", \"2025-09-11T12:00\", \"2025-09-11T13:00\", \"2025-09-11T14:00\", \"2025-09-11T15:00\", \"2025-09-11T16:00\", \"2025-09-11T17:00\", \"2025-09-11T18:00\", \"2025-09-11T19:00\", \"2025-09-11T20:00\", \"2025-09-11T21:00\", \"2025-09-11T22:00\", \"2025-09-11T23:00\", \"2025-09-12T00:00\", \"2025-09-12T01:00\", \"2025-09-12T02:00\", \"2025-09-12T03:00\", \"2025-09-12T04:00\", \"2025-09-12T05:00\", \"2025-09-12T06:00\", \"2025-09-12T07:00\", \"2025-09-12T08:00\", \"2025-09-12T09:00\", \"2025-09-12T10:00\", \"2025-09-12T11:00\", \"2025-09-12T12:00\", \"2025-09-12T13:00\", \"2025-09-12T14:00\", \"2025-09-12T15:00\", \"2025-09-12T16:00\", \"2025-09-12T17:00\", \"2025-09-12T18:00\", \"2025-09-12T19:00\", \"2025-09-12T20:00\", \"2025-09-12T21:00\", \"2025-09-12T22:00\", \"2025-09-12T23:00\"], \"temperature_2m\": [15.7, 15.1, 14.9, 15.3, 14.9, 14.5, 14.5, 15.4, 16.1, 17.4, 18.8, 19.6, 21.4, 22.4, 23.1, 23.7, 23.2, 22.7, 21.8, 21.4, 20.5, 18.8, 17.6, 17.3, 17.2, 16.9, 16.8, 16.9, 16.5, 16.4, 16.5, 16.8, 17.0, 17.9, 18.9, 18.8, 19.0, 19.8, 20.7, 21.2, 20.7, 19.2, 18.6, 17.8, 17.0, 16.8, 16.8, 16.6, 16.6, 16.6, 16.5, 15.9, 15.8, 15.5, 15.5, 15.8, 16.0, 16.3, 16.3, 16.7, 16.5, 16.7, 18.1, 18.7, 18.8, 16.7, 19.0, 18.3, 17.8, 17.7, 17.0, 16.4, 16.5, 16.5, 16.4, 16.2, 16.1, 16.1, 16.3, 16.5, 16.7, 16.9, 17.6, 18.5, 19.5, 20.1, 20.5, 20.4, 19.8, 19.0, 18.2, 17.4, 16.9, 16.6, 16.4, 16.4, 16.2, 16.1, 16.1, 16.1, 16.1, 16.2, 16.3, 16.4, 16.7, 17.1, 17.8, 18.9, 20.3, 20.8, 20.8, 20.2, 19.4, 18.9, 18.3, 17.5, 17.0, 16.8, 16.7, 16.5]}, \"daily_units\": {\"time\": \"iso8601\", \"sunrise\": \"iso8601\", \"sunset\": \"iso8601\"}, \"daily\": {\"time\": [\"2025-09-08\", \"2025-09-09\", \"2025-09-10\", \"2025-09-11\", \"2025-09-12\"], \"sunrise\": [\"2025-09-08T06:46\", \"2025-09-09T06:47\", \"2025-09-10T06:47\", \"2025-09-11T06:48\", \"2025-09-12T06:49\"], \"sunset\": [\"2025-09-08T19:28\", \"2025-09-09T19:26\", \"2025-09-10T19:25\", \"2025-09-11T19:23\", \"2025-09-12T19:21\"]}}, \"status\": \"success\", \"providerExecuted\": true}",
+          "additional_kwargs": {},
+          "response_metadata": {},
+          "type": "tool",
+          "name": "getWeather",
+          "id": "5117eb0e-84e4-4ef9-a10c-48a3eb00a1f0",
+          "tool_call_id": "call_366dc41f4b1843f79ba5b8",
+          "artifact": null,
+          "status": "success"
+        },
+        {
+          "content": "以下是旧金山 (San Francisco) 的当前天气情况：\n\n- **当前温度**: 17.9°C\n- **体感温度**: 18.0°C\n- **湿度**: 93%\n- **气压**: 1016.6 hPa\n- **云量**: 30%\n- **风速**: 15.5 km/h\n- **风向**: 248°\n\n如果需要更多天气信息，请告诉我！",
+          "additional_kwargs": {},
+          "response_metadata": {
+            "finish_reason": "stop",
+            "model_name": "qwen-plus"
+          },
+          "type": "ai",
+          "name": null,
+          "id": "run--703812fa-5be8-4e52-951a-ab6cc391e5db",
+          "example": false,
+          "tool_calls": [],
+          "invalid_tool_calls": [],
+          "usage_metadata": null
+        }
+      ]
+    }
+  },
+  {
+    "#": 37,
+    "event": "end",
+    "data": {
+      "status": "completed"
+    }
+  }
+]
