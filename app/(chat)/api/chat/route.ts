@@ -303,7 +303,80 @@ export async function POST(request: Request) {
                             const toolCallData = JSON.parse(lastValueContent)
                             const toolCallStatus = toolCallData.status
 
-                            if ('success' === toolCallStatus) {
+                            // 如果 providerExecuted 为 false，表示 LangGraph 侧仅完成了入参校验，需在此执行本地工具
+                            if (
+                              toolCallStatus === 'success' &&
+                              toolCallData?.providerExecuted === false
+                            ) {
+                              try {
+                                if (lastValueName === 'createDocument') {
+                                  const title = String(toolCallData?.data?.title || '')
+                                  const kind = String(toolCallData?.data?.kind || '') as any
+
+                                  const toolImpl = createDocument({ id: lastValueId, session, dataStream })
+                                  const output = await toolImpl.execute({ title, kind })
+
+                                  dataStream.write({
+                                    type: 'tool-output-available',
+                                    toolCallId: lastValueToolCallId,
+                                    providerExecuted: true,
+                                    output: {
+                                      ...output,
+                                      id: lastValueId,
+                                    },
+                                  })
+                                } else if (lastValueName === 'updateDocument') {
+                                  const idArg = String(toolCallData?.data?.id || '')
+                                  const description = String(toolCallData?.data?.description || '')
+
+                                  const toolImpl = updateDocument({ session, dataStream })
+                                  const output = await toolImpl.execute({ id: idArg, description })
+
+                                  if ((output as any)?.error) {
+                                    dataStream.write({
+                                      type: 'tool-output-error',
+                                      toolCallId: lastValueToolCallId,
+                                      providerExecuted: true,
+                                      errorText: (output as any).error,
+                                    })
+                                  } else {
+                                    dataStream.write({
+                                      type: 'tool-output-available',
+                                      toolCallId: lastValueToolCallId,
+                                      providerExecuted: true,
+                                      output: {
+                                        ...output,
+                                        id: idArg || lastValueId,
+                                      },
+                                    })
+                                  }
+                                } else {
+                                  // 其它工具，按原样透传（未来可在此扩展更多本地工具）
+                                  dataStream.write({
+                                    type: 'tool-output-available',
+                                    toolCallId: lastValueToolCallId,
+                                    providerExecuted: toolCallData.providerExecuted ?? true,
+                                    output: {
+                                      ...toolCallData.data,
+                                      id: lastValueId,
+                                    },
+                                  })
+                                }
+                              } catch (toolErr: any) {
+                                console.error('[Chat Agent] 本地工具执行失败', {
+                                  message: toolErr?.message,
+                                  stack: toolErr?.stack,
+                                  tool: lastValueName,
+                                })
+                                dataStream.write({
+                                  type: 'tool-output-error',
+                                  toolCallId: lastValueToolCallId,
+                                  providerExecuted: true,
+                                  errorText: toolErr?.message || 'Tool execution failed',
+                                })
+                              }
+                            } else if ('success' === toolCallStatus) {
+                              // 已在 LangGraph 侧执行或无需本地执行，原样返回
                               dataStream.write({
                                 type: 'tool-output-available',
                                 toolCallId: lastValueToolCallId,
@@ -314,7 +387,6 @@ export async function POST(request: Request) {
                                 },
                               })
                             } else {
-                              // console.log(``)
                               dataStream.write({
                                 type: 'tool-output-error',
                                 toolCallId: lastValueToolCallId,
