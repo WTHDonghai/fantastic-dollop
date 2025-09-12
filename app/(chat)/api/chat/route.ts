@@ -144,6 +144,7 @@ export async function POST(request: Request) {
     console.log(`== uiMessages: ${JSON.stringify(uiMessages)} ==`)
 
     const { longitude, latitude, city, country } = geolocation(request);
+    console.log(`== city: ${city}, country: ${country} ==`);
 
     const requestHints: RequestHints = {
       longitude,
@@ -210,7 +211,15 @@ export async function POST(request: Request) {
           let eventCount = 0;
           // 同一条助手消息使用稳定的 ID，避免 UIMessageStream 关联失败
           const outMessageId = generateUUID();
-          const toolCallMappings:Map<string,any> = new Map<string, any>(); // toolCallId: obj
+          class ToolCallInfo {
+            id: string = '';
+            name: string = '';
+            documentId?: string;
+            args?: any;
+            data?: any;
+            status: 'pending' | 'completed' | 'error' = 'pending';
+          }
+          const toolCallMappings: Map<string, ToolCallInfo> = new Map<string, ToolCallInfo>(); // toolCallId: obj
 
           // 处理流式响应
           try {
@@ -227,168 +236,144 @@ export async function POST(request: Request) {
                 const data = chunk.data as any;
                 const event = chunk.event;
 
-                if ("values" === event) {
-                }
+                switch (event) {
+                  case "values":
+                    if (data.messages) {
+                      const lastValueMessage = data.messages.at(-1)
+                      console.log(`== > lastValuemessage: ${JSON.stringify(data.messages.at(-1), null, 4)} ==`)
 
-                if ("messages" === event) {
-                  // 处理消息内容
-                  if (data && Array.isArray(data)) {
+                      // 有时带上 run作为前缀,只有在tool调用的过程才出现
+                      // [TODO]: 考虑作为document id?
+                      const lastValueId = lastValueMessage.id
+
+                      // 只有tpye === 'tool'的时候才有值，表示工具的返回
+                      const lastValueToolCallId = lastValueMessage.tool_call_id
+                      // type === 'tool'的时候, 值为tool name
+                      const lastValueName = lastValueMessage.name
+                      const lastValueToolCalls: [] = lastValueMessage.tool_calls ? lastValueMessage.tool_calls : []
+                      const lastValueContent = lastValueMessage.content
+                      const lastValueArtifact = lastValueMessage.artifact
+
+                      if ("ai" === lastValueMessage.type) {
+                        // [TODO]: 工具调用开始
+                        lastValueToolCalls.forEach((tool_call: any) => {
+                          console.log(`[Chat Agent]: ${tool_call.name}工具调用开始`)
+                          console.log(`[Chat Agent]: ${tool_call.name}Args:${tool_call?.args}`)
+
+                          // 换成工具调用
+                          toolCallMappings.set(tool_call.id, {
+                            id: tool_call.id,
+                            name: tool_call.name,
+                            documentId: '',
+                            args: tool_call?.args,
+                            status: 'pending'
+                          }); // end of toolCallMappings
+                          dataStream.write({
+                            type: 'tool-input-available',
+                            // toolCallId: lastValueToolCallId,
+                            toolCallId: tool_call.id,
+                            toolName: tool_call.name,
+                            input: tool_call?.args
+                          })
+
+                          // document 相关的tool_call 操作
+                          // if (tool_call.args && typeof (tool_call.args) === 'object') {
+                          //   const documentId = generateUUID();
+                          //   const createDoc = createDocument({
+                          //     id: documentId,
+                          //     dataStream,
+                          //     session,
+                          //   });
+                          //   toolCallMappings.set(toolCallId, { id: documentId });
+                          //   const documentToolCallInfo = toolCallMappings.get(toolCallId)
+                          //   console.log(`documentToolCallInfo: ${JSON.stringify(documentToolCallInfo)}`);
+                          // }
+
+                        });
+
+                      } // end of values.type.ai
+
+                      else if ("tool" === lastValueMessage.type) {
+                        // [TODO]: 工具调用结束
+                        console.log(`[Chat Agent]: ${lastValueName}工具调用结束`)
+                        console.log(`[Chat Agent]: ${lastValueName}工具调用结果:${lastValueContent}`)
+                        console.log(`[Chat Agent]: ${lastValueName}工具调用ID:${lastValueId}`)
+                        console.log(`[Chat Agent]: ${lastValueName}工具调用Tool Casll ID:${lastValueToolCallId}`)
+                        console.log(`[Chat Agent]: ${lastValueName}工具调用Artifact:${lastValueArtifact}`)
+
+                        if (toolCallMappings.has(lastValueToolCallId)) {
+                          toolCallInfo: ToolCallInfo = toolCallMappings.get(lastValueToolCallId)
+                          if (lastValueContent) {
+                            // [TODO]: 调用前端工具，写入流
+                            const toolCallData = JSON.parse(lastValueContent)
+                            const toolCallStatus = toolCallData.status
+
+                            if ('success' === toolCallStatus) {
+                              dataStream.write({
+                                type: 'tool-output-available',
+                                toolCallId: lastValueToolCallId,
+                                providerExecuted: toolCallData.providerExecuted ?? true,
+                                output: {
+                                  ...toolCallData.data,
+                                  id: lastValueId,
+                                },
+                              })
+                            } else {
+                              // console.log(``)
+                              dataStream.write({
+                                type: 'tool-output-error',
+                                toolCallId: lastValueToolCallId,
+                                providerExecuted: toolCallData.providerExecuted ?? true,
+                                errorText: toolCallData.message,
+                              })
+                            }
+
+                          }
+                        } // end of toolCallMappings.has(lastValueToolCallId)
+
+                      } // end of values.type.tool
+
+                    }// end of data.messages
+
+                    break;
+
+                  case "messages":
                     const messageChunk = data[0];
+                    const contentChunk = messageChunk?.content;
+                    const typeChunk = messageChunk?.type;
 
-                    const msg_type: string = messageChunk?.type;
-                    const content = messageChunk?.content;
-                    const additional_kwargs = messageChunk?.additional_kwargs
-
-                    // 兼容多种可能的 content 结构，提取字符串文本
-                    let text: string | undefined;
-                    if (typeof content === 'string') {
-                      text = content;
-                    } else if (Array.isArray(content)) {
-                      text = content
-                        .map((c: any) =>
+                    console.log(`== > message: ${JSON.stringify(messageChunk, null, 4)} ==`)
+                    if ('AIMessageChunk' === typeChunk) {
+                      // 兼容多种可能的 content 结构，提取字符串文本
+                      let text: string | undefined;
+                      if (typeof contentChunk === 'string') {
+                        text = contentChunk;
+                      } else if (Array.isArray(contentChunk)) {
+                        text = contentChunk.map((c: any) =>
                           typeof c === 'string'
                             ? c
                             : typeof c?.text === 'string'
                               ? c.text
                               : ''
-                        )
-                        .join('');
-                    } else if (content && typeof content?.text === 'string') {
-                      text = content.text;
-                    }
-
-                    if (msg_type === "AIMessageChunk") {
+                        ).join('');
+                      } else if (content && typeof content?.text === 'string') {
+                        text = content.text;
+                      }
                       if (text && text.length) {
-                        // console.log(`[Chat Agent] 输出文本增量, text-delta: "${text}"`);
                         dataStream.write({ id: outMessageId, type: 'text-delta', delta: text });
                       }
 
-                      // 工具开始调用
-                      if (additional_kwargs) {
-                        if ("tool_calls" in additional_kwargs) {
-                          const tool_calls: [any] = additional_kwargs?.tool_calls;
+                    } //  end of typeChunk === 'AIMessageChunk'
 
-                          for (const tool_call of tool_calls) {
-                            const tool_fun = tool_call?.function
-                            const toolCallId: string = tool_call.id
+                    break;
 
-                            if (tool_fun) {
-                              const toolName: string = tool_fun?.name;
-                              const toolInput = tool_fun?.arguments;
+                  case "end":
+                    dataStream.write({ id: outMessageId, type: 'text-end' });
+                    dataStream.write({ type: 'finish-step' });
+                    dataStream.write({ type: 'finish' });
+                    break;
 
-                              console.log(`[Chat Agent] 调用工具: ${toolName}, toolId: ${toolCallId}, toolInput: ${toolInput}`);
-
-                              // 发送工具调用开始事件 - 使用正确的消息格式
-                              dataStream.write({
-                                type: 'tool-input-available',
-                                toolCallId: toolCallId,
-                                toolName: toolName,
-                                input: toolInput
-                              })
-
-                              console.log(`== > parsedInput: ${toolInput} ==`)
-                              let parsedInput;
-                              if(typeof toolInput === 'string') {
-                                  parsedInput = JSON.parse(toolInput);
-                              } else {
-                                parsedInput = toolInput
-                              }
-                              console.log(`title: ${parsedInput.title}, kind: ${parsedInput.kind}, id: ${parsedInput.id}`)
-                              // [TODO]: 调用具体的工具
-                              if (parsedInput?.title && parsedInput?.kind) {
-                                if (toolName === "createDocument") {
-                                  const documentId = generateUUID();
-                                  const createDoc = createDocument({
-                                    id: documentId,
-                                    dataStream,
-                                    session,
-                                  });
-                                  if(documentId) {
-                                    toolCallMappings.set(toolCallId, { id: documentId });
-                                    const documentToolCallInfo = toolCallMappings.get(toolCallId)
-                                    console.log(`documentToolCallInfo: ${JSON.stringify(documentToolCallInfo)}`);
-                                  }
-                                  const result = await createDoc.execute({
-                                    title: parsedInput.title,
-                                    kind: parsedInput.kind,
-                                  })
-                                  console.log(`[Chat Agent] Document created: ${JSON.stringify(result)}`);
-                                } 
-                                // else if (toolName === "updateDocument" && toolInput.id) {
-                                //   await updateDocument({
-                                //     id: toolInput.id,
-                                //     title: toolInput.title,
-                                //     dataStream,
-                                //     session,
-                                //   });
-                                //   console.log(`[Chat Agent] Document updated: ${parsedOutput.data.id}`);
-                                // } 
-                                // else if (toolName === "requestSuggestions") {
-                                //   const suggestions = await requestSuggestions({
-                                //     title: parsedOutput.data.title,
-                                //     chatId: id,
-                                //     userId: session.user.id,
-                                //   });
-                                //   console.log(`[Chat Agent] Suggestions requested: ${JSON.stringify(suggestions)}`);
-                                // }
-                              } // if (toolInput?.title && toolInput?.kind) {
-
-                            }
-                          }
-                        } // end of tool_calls
-                      } // end of 'msg_type === AIMessageChunk and additional_kwargs'
-                    } // end of msg_type === AIMessageChunk
-
-                    // 工具执行完成，返回
-                    if (msg_type == "tool") {
-                      const toolName: string = messageChunk?.name;
-                      const toolResult = messageChunk?.content;
-                      const toolCallId = messageChunk?.tool_call_id;
-                      console.log(`[Chat Agent] Tool "${toolName}" 调用完成, 结果: ${toolResult}, toolCallId: ${toolCallId}`);
-                      let parsedOutput;
-                      if (typeof toolResult === 'string') {
-                        try {
-                          parsedOutput = JSON.parse(toolResult);
-                        } catch (e) {
-                          console.warn(e)
-                        }
-                      } else {
-                        parsedOutput = toolResult;
-                      }
-                      console.log(`parsedOutput: ${JSON.stringify(parsedOutput)}`);
-                      if (parsedOutput !== undefined) {
-                        // 发送工具输出可用事件
-                        const documentToolCallInfo = toolCallMappings.get(toolCallId);
-                        console.log(`documentToolCallInfo: ${JSON.stringify(documentToolCallInfo)}`);
-                        let documentId;
-                        if(documentToolCallInfo) {
-                          documentId = documentToolCallInfo.id
-                          toolCallMappings.delete(toolCallId);
-                        }
-                        console.log(`[Caht Agent] Tool call end: ${JSON.stringify(messageChunk, null, 4)}`);
-                        dataStream.write({
-                          type: 'tool-output-available',
-                          toolCallId: toolCallId,
-                          // providerExecuted: parsedOutput.providerExecuted ?? true,
-                          providerExecuted: true,
-                          output: {
-                            ...parsedOutput.data,
-                            id:  documentId?? parsedOutput.data.id
-                          },
-                        });
-                      }
-                    } // end of msg_type === "tool"
-                  } // end of data is array instance
-                }
-
-                if ("end" === event) {
-                  dataStream.write({ id: outMessageId, type: 'text-end' });
-                  console.log(`text-end`)
-                  dataStream.write({ type: 'finish-step' });
-                  console.log(`finish-step`)
-                  dataStream.write({ type: 'finish' });
-                  console.log(`finish`)
-                }
+                } // end of switch event
               }
             }
           } catch (err: any) {

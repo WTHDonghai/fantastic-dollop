@@ -70,7 +70,7 @@ export async function getLangGraphMessageStream(params: {
     assistant.assistant_id,
     {
       config: assistant.config || {},
-      streamMode: ['messages'],
+      streamMode: ['values','messages',],
       input: { messages: simpleMessages },
     },
   );
