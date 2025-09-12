@@ -79,7 +79,7 @@ export function Chat({
       },
     }),
     onData: (dataPart) => {
-      setDataStream((ds) => (ds ? [...ds, dataPart] : []));
+      setDataStream((ds) => [...ds, dataPart]);
     },
     onFinish: () => {
       mutate(unstable_serialize(getChatHistoryPaginationKey));

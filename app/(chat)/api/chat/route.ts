@@ -211,6 +211,9 @@ export async function POST(request: Request) {
           let eventCount = 0;
           // 同一条助手消息使用稳定的 ID，避免 UIMessageStream 关联失败
           const outMessageId = generateUUID();
+          // 跟踪是否已开始步骤与文本块，确保工具组件与文本顺序正确
+          let stepStarted = false;
+          let textOpen = false;
           class ToolCallInfo {
             id: string = '';
             name: string = '';
@@ -226,10 +229,10 @@ export async function POST(request: Request) {
             for await (const chunk of lgStream as AsyncIterable<any>) {
               eventCount++;
 
-              if (eventCount === 1) {
-                // 标准步骤开始事件
+              if (!stepStarted) {
+                // 标准步骤开始事件（仅一次）
                 dataStream.write({ type: 'start-step' });
-                dataStream.write({ id: outMessageId, type: 'text-start' });
+                stepStarted = true;
               }
 
               if (chunk.data) {
@@ -260,6 +263,12 @@ export async function POST(request: Request) {
                           console.log(`[Chat Agent]: ${tool_call.name}工具调用开始`)
                           console.log(`[Chat Agent]: ${tool_call.name}Args:${tool_call?.args}`)
 
+                          // 在插入工具组件前结束当前文本块，保证后续文本出现在组件之后
+                          if (textOpen) {
+                            dataStream.write({ id: outMessageId, type: 'text-end' });
+                            textOpen = false;
+                          }
+
                           // 换成工具调用
                           toolCallMappings.set(tool_call.id, {
                             id: tool_call.id,
@@ -275,20 +284,6 @@ export async function POST(request: Request) {
                             toolName: tool_call.name,
                             input: tool_call?.args
                           })
-
-                          // document 相关的tool_call 操作
-                          // if (tool_call.args && typeof (tool_call.args) === 'object') {
-                          //   const documentId = generateUUID();
-                          //   const createDoc = createDocument({
-                          //     id: documentId,
-                          //     dataStream,
-                          //     session,
-                          //   });
-                          //   toolCallMappings.set(toolCallId, { id: documentId });
-                          //   const documentToolCallInfo = toolCallMappings.get(toolCallId)
-                          //   console.log(`documentToolCallInfo: ${JSON.stringify(documentToolCallInfo)}`);
-                          // }
-
                         });
 
                       } // end of values.type.ai
@@ -302,7 +297,7 @@ export async function POST(request: Request) {
                         console.log(`[Chat Agent]: ${lastValueName}工具调用Artifact:${lastValueArtifact}`)
 
                         if (toolCallMappings.has(lastValueToolCallId)) {
-                          toolCallInfo: ToolCallInfo = toolCallMappings.get(lastValueToolCallId)
+                          const toolCallInfo: ToolCallInfo = toolCallMappings.get(lastValueToolCallId)
                           if (lastValueContent) {
                             // [TODO]: 调用前端工具，写入流
                             const toolCallData = JSON.parse(lastValueContent)
@@ -356,10 +351,15 @@ export async function POST(request: Request) {
                               ? c.text
                               : ''
                         ).join('');
-                      } else if (content && typeof content?.text === 'string') {
-                        text = content.text;
+                      } else if (contentChunk && typeof (contentChunk as any)?.text === 'string') {
+                        text = (contentChunk as any).text;
                       }
                       if (text && text.length) {
+                        // 若尚未开始文本块（例如工具组件之后），先开始新的文本块
+                        if (!textOpen) {
+                          dataStream.write({ id: outMessageId, type: 'text-start' });
+                          textOpen = true;
+                        }
                         dataStream.write({ id: outMessageId, type: 'text-delta', delta: text });
                       }
 
@@ -368,7 +368,10 @@ export async function POST(request: Request) {
                     break;
 
                   case "end":
-                    dataStream.write({ id: outMessageId, type: 'text-end' });
+                    if (textOpen) {
+                      dataStream.write({ id: outMessageId, type: 'text-end' });
+                      textOpen = false;
+                    }
                     dataStream.write({ type: 'finish-step' });
                     dataStream.write({ type: 'finish' });
                     break;

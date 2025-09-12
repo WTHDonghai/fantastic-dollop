@@ -1,0 +1,40 @@
+sequenceDiagram
+  autonumber
+  participant Model as LLM/LangGraph
+  participant Server as Server Route (UIMessageStream)
+  participant UI as Chat UI
+
+  Note over Server: stepStarted=false, textOpen=false
+
+  Model->>Server: first chunk (pre-tool text)
+  Server->>UI: start-step
+  alt first text chunk
+    Server->>UI: text-start (id=outMessageId)
+    Server->>UI: text-delta("Hello ...")
+    Note over Server: textOpen=true
+  end
+
+  Model->>Server: values.ai with tool_calls=[getWeather]
+  opt textOpen
+    Server->>UI: text-end (close current text)
+    Note over Server: textOpen=false
+  end
+  Server->>UI: tool-input-available(tool=getWeather, args)
+
+  Model->>Server: values.tool (tool result)
+  Server->>UI: tool-output-available(toolCallId, output)
+
+  Model->>Server: more text chunks after tool
+  alt textOpen is false
+    Server->>UI: text-start (same outMessageId)
+    Note over Server: textOpen=true
+  end
+  Server->>UI: text-delta("... continues below weather ...")
+
+  Model-->>Server: end
+  opt textOpen
+    Server->>UI: text-end
+  end
+  Server->>UI: finish-step
+  Server->>UI: finish
+
