@@ -7,7 +7,11 @@ config({
   path: '.env',
 });
 
-const connection = postgres(process.env.POSTGRES_URL!, { max: 1 });
+const url = process.env.POSTGRES_URL;
+if (!url) {
+  throw new Error('POSTGRES_URL is not set');
+}
+const connection = postgres(url, { max: 1 });
 const db = drizzle(connection);
 
 async function resetDatabase() {

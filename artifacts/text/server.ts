@@ -33,7 +33,7 @@ export const textDocumentHandler = createDocumentHandler<'text'>({
         const data = chunk.data as any;
         const event = chunk.event;
 
-        if ("messages" === event) {
+        if (event === "messages") {
           // 处理消息内容
           if (data && Array.isArray(data)) {
             const messageChunk = data[0];
@@ -61,7 +61,7 @@ export const textDocumentHandler = createDocumentHandler<'text'>({
             }
 
             if (msg_type === "AIMessageChunk") {
-              if (text && text.length) {
+              if (text?.length) {
                 draftContent += text;
                 dataStream.write({
                   type: 'data-textDelta',

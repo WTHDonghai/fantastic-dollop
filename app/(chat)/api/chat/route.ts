@@ -1,12 +1,9 @@
 import {
-  convertToModelMessages,
   createUIMessageStream,
   JsonToSseTransformStream,
-  smoothStream,
-  stepCountIs,
 } from 'ai';
 import { auth, type UserType } from '@/app/(auth)/auth';
-import { type RequestHints } from '@/lib/ai/prompts';
+import type { RequestHints } from '@/lib/ai/prompts';
 import {
   createStreamId,
   deleteChatById,
@@ -20,8 +17,6 @@ import { convertToUIMessages, generateUUID } from '@/lib/utils';
 import { generateTitleFromUserMessage } from '../../actions';
 import { createDocument } from '@/lib/ai/tools/create-document';
 import { updateDocument } from '@/lib/ai/tools/update-document';
-import { requestSuggestions } from '@/lib/ai/tools/request-suggestions';
-import { isProductionEnvironment, isTestEnvironment } from '@/lib/constants';
 
 import { entitlementsByUserType } from '@/lib/ai/entitlements';
 import { postRequestBodySchema, type PostRequestBody } from './schema';
@@ -36,6 +31,7 @@ import type { ChatMessage } from '@/lib/types';
 import type { ChatModel } from '@/lib/ai/models';
 import type { VisibilityType } from '@/components/visibility-selector';
 import { getLangGraphMessageStream } from '@/lib/langgraph/chat';
+import { artifactKinds } from '@/lib/artifacts/server';
 
 // 全局错误处理：捕获未处理的 Promise 拒绝和未捕获异常，便于定位 "reading 'text'" 的来源
 (() => {
@@ -215,8 +211,8 @@ export async function POST(request: Request) {
           let stepStarted = false;
           let textOpen = false;
           class ToolCallInfo {
-            id: string = '';
-            name: string = '';
+            id = '';
+            name = '';
             documentId?: string;
             args?: any;
             data?: any;
@@ -257,7 +253,7 @@ export async function POST(request: Request) {
                       const lastValueContent = lastValueMessage.content
                       const lastValueArtifact = lastValueMessage.artifact
 
-                      if ("ai" === lastValueMessage.type) {
+                      if (lastValueMessage.type === "ai") {
                         // [TODO]: 工具调用开始
                         lastValueToolCalls.forEach((tool_call: any) => {
                           console.log(`[Chat Agent]: ${tool_call.name}工具调用开始`)
@@ -288,7 +284,7 @@ export async function POST(request: Request) {
 
                       } // end of values.type.ai
 
-                      else if ("tool" === lastValueMessage.type) {
+                      else if (lastValueMessage.type === "tool") {
                         // [TODO]: 工具调用结束
                         console.log(`[Chat Agent]: ${lastValueName}工具调用结束`)
                         console.log(`[Chat Agent]: ${lastValueName}工具调用结果:${lastValueContent}`)
@@ -300,8 +296,17 @@ export async function POST(request: Request) {
                           const toolCallInfo: ToolCallInfo = toolCallMappings.get(lastValueToolCallId)
                           if (lastValueContent) {
                             // [TODO]: 调用前端工具，写入流
-                            const toolCallData = JSON.parse(lastValueContent)
-                            const toolCallStatus = toolCallData.status
+                            let toolCallData: any = null
+                            try {
+                              toolCallData = typeof lastValueContent === 'string' ? JSON.parse(lastValueContent) : lastValueContent
+                            } catch (parseErr: any) {
+                              console.warn('[Chat Agent] 工具输出 JSON 解析失败，按原样透传', {
+                                contentSample: String(lastValueContent).slice(0, 200),
+                                message: parseErr?.message,
+                              })
+                              toolCallData = { status: 'failed', message: 'Invalid tool output format', data: {}, providerExecuted: true }
+                            }
+                            const toolCallStatus = toolCallData?.status
 
                             // 如果 providerExecuted 为 false，表示 LangGraph 侧仅完成了入参校验，需在此执行本地工具
                             if (
@@ -313,42 +318,60 @@ export async function POST(request: Request) {
                                   const title = String(toolCallData?.data?.title || '')
                                   const kind = String(toolCallData?.data?.kind || '') as any
 
-                                  const toolImpl = createDocument({ id: lastValueId, session, dataStream })
-                                  const output = await toolImpl.execute({ title, kind })
-
-                                  dataStream.write({
-                                    type: 'tool-output-available',
-                                    toolCallId: lastValueToolCallId,
-                                    providerExecuted: true,
-                                    output: {
-                                      ...output,
-                                      id: lastValueId,
-                                    },
-                                  })
-                                } else if (lastValueName === 'updateDocument') {
-                                  const idArg = String(toolCallData?.data?.id || '')
-                                  const description = String(toolCallData?.data?.description || '')
-
-                                  const toolImpl = updateDocument({ session, dataStream })
-                                  const output = await toolImpl.execute({ id: idArg, description })
-
-                                  if ((output as any)?.error) {
+                                  if (!title || !kind || !artifactKinds.includes(kind)) {
                                     dataStream.write({
                                       type: 'tool-output-error',
                                       toolCallId: lastValueToolCallId,
                                       providerExecuted: true,
-                                      errorText: (output as any).error,
+                                      errorText: `Invalid createDocument args: title=${title ? 'ok' : 'missing'}, kind=${kind || 'missing'}`,
                                     })
                                   } else {
+                                    const toolImpl = createDocument({ id: lastValueId, session, dataStream })
+                                    const output = await toolImpl.execute({ title, kind })
+
                                     dataStream.write({
                                       type: 'tool-output-available',
                                       toolCallId: lastValueToolCallId,
                                       providerExecuted: true,
                                       output: {
                                         ...output,
-                                        id: idArg || lastValueId,
+                                        id: lastValueId,
                                       },
                                     })
+                                  }
+                                } else if (lastValueName === 'updateDocument') {
+                                  const idArg = String(toolCallData?.data?.id || '')
+                                  const description = String(toolCallData?.data?.description || '')
+
+                                  if (!idArg || !description) {
+                                    dataStream.write({
+                                      type: 'tool-output-error',
+                                      toolCallId: lastValueToolCallId,
+                                      providerExecuted: true,
+                                      errorText: `Invalid updateDocument args: id=${idArg ? 'ok' : 'missing'}, description=${description ? 'ok' : 'missing'}`,
+                                    })
+                                  } else {
+                                    const toolImpl = updateDocument({ session, dataStream })
+                                    const output = await toolImpl.execute({ id: idArg, description })
+
+                                    if ((output as any)?.error) {
+                                      dataStream.write({
+                                        type: 'tool-output-error',
+                                        toolCallId: lastValueToolCallId,
+                                        providerExecuted: true,
+                                        errorText: (output as any).error,
+                                      })
+                                    } else {
+                                      dataStream.write({
+                                        type: 'tool-output-available',
+                                        toolCallId: lastValueToolCallId,
+                                        providerExecuted: true,
+                                        output: {
+                                          ...output,
+                                          id: idArg || lastValueId,
+                                        },
+                                      })
+                                    }
                                   }
                                 } else {
                                   // 其它工具，按原样透传（未来可在此扩展更多本地工具）
@@ -375,7 +398,7 @@ export async function POST(request: Request) {
                                   errorText: toolErr?.message || 'Tool execution failed',
                                 })
                               }
-                            } else if ('success' === toolCallStatus) {
+                            } else if (toolCallStatus === 'success') {
                               // 已在 LangGraph 侧执行或无需本地执行，原样返回
                               dataStream.write({
                                 type: 'tool-output-available',
@@ -404,13 +427,13 @@ export async function POST(request: Request) {
 
                     break;
 
-                  case "messages":
+                  case "messages": {
                     const messageChunk = data[0];
                     const contentChunk = messageChunk?.content;
                     const typeChunk = messageChunk?.type;
 
                     console.log(`== > message: ${JSON.stringify(messageChunk, null, 4)} ==`)
-                    if ('AIMessageChunk' === typeChunk) {
+                    if (typeChunk === 'AIMessageChunk') {
                       // 兼容多种可能的 content 结构，提取字符串文本
                       let text: string | undefined;
                       if (typeof contentChunk === 'string') {
@@ -426,7 +449,7 @@ export async function POST(request: Request) {
                       } else if (contentChunk && typeof (contentChunk as any)?.text === 'string') {
                         text = (contentChunk as any).text;
                       }
-                      if (text && text.length) {
+                      if (text?.length) {
                         // 若尚未开始文本块（例如工具组件之后），先开始新的文本块
                         if (!textOpen) {
                           dataStream.write({ id: outMessageId, type: 'text-start' });
@@ -438,6 +461,7 @@ export async function POST(request: Request) {
                     } //  end of typeChunk === 'AIMessageChunk'
 
                     break;
+                  }
 
                   case "end":
                     if (textOpen) {

@@ -1,6 +1,4 @@
 import { Client } from '@langchain/langgraph-sdk';
-// [TODO]: 使用界面进行接入，而不是写死
-import type { ChatModel } from '@/lib/ai/models';
 // import type { RequestHints } from '@/lib/ai/prompts';
 // import { systemPrompt } from '@/lib/ai/prompts';
 
