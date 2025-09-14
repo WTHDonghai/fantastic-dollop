@@ -14,7 +14,7 @@ interface CreateDocumentProps {
   dataStream: UIMessageStreamWriter<ChatMessage>;
 }
 
-export const createDocument = ({ id,session, dataStream }: CreateDocumentProps) =>
+export const createDocument = ({ id, session, dataStream }: CreateDocumentProps) =>
   tool({
     description:
       'Create a document for a writing or content creation activities. This tool will call other functions that will generate the contents of the document based on the title and kind.',
