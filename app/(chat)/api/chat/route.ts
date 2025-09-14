@@ -85,7 +85,6 @@ export async function POST(request: Request) {
 
   try {
     const json = await request.json();
-    debugger;
     requestBody = postRequestBodySchema.parse(json);
     console.log(`== Chat Request: ${json} ==`)
   } catch (_) {
