@@ -18,8 +18,15 @@ export const updateDocument = ({ session, dataStream }: UpdateDocumentProps) =>
       description: z
         .string()
         .describe('The description of changes that need to be made'),
+      mode: z
+        .enum(['update', 'version'])
+        .default('update')
+        .describe(
+          "Update strategy: 'update' overwrites current record; 'version' creates a new version with same id",
+        )
+        .optional(),
     }),
-    execute: async ({ id, description }) => {
+    execute: async ({ id, description, mode }) => {
       const document = await getDocumentById({ id });
 
       if (!document) {
@@ -48,6 +55,7 @@ export const updateDocument = ({ session, dataStream }: UpdateDocumentProps) =>
         description,
         dataStream,
         session,
+        mode: mode ?? 'update',
       });
 
       dataStream.write({ type: 'data-finish', data: null, transient: true });
@@ -56,7 +64,10 @@ export const updateDocument = ({ session, dataStream }: UpdateDocumentProps) =>
         id,
         title: document.title,
         kind: document.kind,
-        content: 'The document has been updated successfully.',
+        content:
+          mode === 'version'
+            ? 'A new document version has been created successfully.'
+            : 'The document has been updated successfully.',
       };
     },
   });

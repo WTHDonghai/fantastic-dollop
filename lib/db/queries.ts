@@ -330,6 +330,34 @@ export async function saveDocument({
   }
 }
 
+export async function updateDocumentContent({
+  id,
+  createdAt,
+  content,
+  title,
+  kind,
+}: {
+  id: string;
+  createdAt: Date;
+  content: string;
+  title?: string;
+  kind?: ArtifactKind;
+}) {
+  try {
+    const setValues: Partial<{ content: string; title: string; kind: ArtifactKind }> = { content };
+    if (typeof title === 'string') setValues.title = title;
+    if (typeof kind === 'string') setValues.kind = kind;
+
+    return await db
+      .update(document)
+      .set(setValues)
+      .where(and(eq(document.id, id), eq(document.createdAt, createdAt)))
+      .returning();
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to update document');
+  }
+}
+
 export async function getDocumentsById({ id }: { id: string }) {
   try {
     const documents = await db

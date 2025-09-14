@@ -85,6 +85,7 @@ export async function POST(request: Request) {
 
   try {
     const json = await request.json();
+    debugger;
     requestBody = postRequestBodySchema.parse(json);
     console.log(`== Chat Request: ${json} ==`)
   } catch (_) {
@@ -273,6 +274,7 @@ export async function POST(request: Request) {
                             args: tool_call?.args,
                             status: 'pending'
                           }); // end of toolCallMappings
+
                           dataStream.write({
                             type: 'tool-input-available',
                             // toolCallId: lastValueToolCallId,
@@ -315,10 +317,11 @@ export async function POST(request: Request) {
                             ) {
                               try {
                                 if (lastValueName === 'createDocument') {
+                                  const documentId = String(toolCallData?.data?.document_id || '')
                                   const title = String(toolCallData?.data?.title || '')
                                   const kind = String(toolCallData?.data?.kind || '') as any
 
-                                  if (!title || !kind || !artifactKinds.includes(kind)) {
+                                  if (!documentId || !title || !kind || !artifactKinds.includes(kind)) {
                                     dataStream.write({
                                       type: 'tool-output-error',
                                       toolCallId: lastValueToolCallId,
@@ -326,7 +329,8 @@ export async function POST(request: Request) {
                                       errorText: `Invalid createDocument args: title=${title ? 'ok' : 'missing'}, kind=${kind || 'missing'}`,
                                     })
                                   } else {
-                                    const toolImpl = createDocument({ id: lastValueId, session, dataStream })
+                                    console.log(`== documentId: ${documentId} ==`)
+                                    const toolImpl = createDocument({ id: documentId, session, dataStream })
                                     const output = await toolImpl.execute({ title, kind })
 
                                     dataStream.write({
@@ -335,13 +339,29 @@ export async function POST(request: Request) {
                                       providerExecuted: true,
                                       output: {
                                         ...output,
-                                        id: lastValueId,
+                                        // id: lastValueId,
+                                        id: documentId,
                                       },
                                     })
                                   }
                                 } else if (lastValueName === 'updateDocument') {
-                                  const idArg = String(toolCallData?.data?.id || '')
+                                  const idArg = String(toolCallData?.data?.document_id || '')
                                   const description = String(toolCallData?.data?.description || '')
+                                  let modeRaw = toolCallData?.data?.mode
+                                  let modeArg = modeRaw === 'version' ? 'version' : (modeRaw === 'update' ? 'update' : undefined)
+
+                                  // 如果工具未显式指定 mode，尝试从 Cookie 读取用户偏好
+                                  if (!modeArg) {
+                                    const cookieHeader = (request.headers.get('cookie') || '').toString();
+                                    const cookieMap = Object.fromEntries(cookieHeader.split(';').map(kv => {
+                                      const [k, ...rest] = kv.trim().split('=');
+                                      return [k, rest.join('=')];
+                                    }));
+                                    const cookieMode = cookieMap['artifact_update_mode'];
+                                    if (cookieMode === 'version' || cookieMode === 'update') {
+                                      modeArg = cookieMode;
+                                    }
+                                  }
 
                                   if (!idArg || !description) {
                                     dataStream.write({
@@ -352,7 +372,9 @@ export async function POST(request: Request) {
                                     })
                                   } else {
                                     const toolImpl = updateDocument({ session, dataStream })
-                                    const output = await toolImpl.execute({ id: idArg, description })
+                                    const payload: any = { id: idArg, description }
+                                    if (modeArg) payload.mode = modeArg
+                                    const output = await toolImpl.execute(payload)
 
                                     if ((output as any)?.error) {
                                       dataStream.write({
@@ -368,7 +390,7 @@ export async function POST(request: Request) {
                                         providerExecuted: true,
                                         output: {
                                           ...output,
-                                          id: idArg || lastValueId,
+                                          id: idArg, 
                                         },
                                       })
                                     }
@@ -381,7 +403,6 @@ export async function POST(request: Request) {
                                     providerExecuted: toolCallData.providerExecuted ?? true,
                                     output: {
                                       ...toolCallData.data,
-                                      id: lastValueId,
                                     },
                                   })
                                 }
@@ -406,7 +427,7 @@ export async function POST(request: Request) {
                                 providerExecuted: toolCallData.providerExecuted ?? true,
                                 output: {
                                   ...toolCallData.data,
-                                  id: lastValueId,
+                                  // id: lastValueId,
                                 },
                               })
                             } else {

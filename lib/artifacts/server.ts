@@ -4,7 +4,7 @@ import { sheetDocumentHandler } from '@/artifacts/sheet/server';
 import { textDocumentHandler } from '@/artifacts/text/server';
 import type { ArtifactKind } from '@/components/artifact';
 import type { Document } from '../db/schema';
-import { saveDocument } from '../db/queries';
+import { saveDocument, updateDocumentContent } from '../db/queries';
 import type { Session } from 'next-auth';
 import type { UIMessageStreamWriter } from 'ai';
 import type { ChatMessage } from '../types';
@@ -29,6 +29,7 @@ export interface UpdateDocumentCallbackProps {
   description: string;
   dataStream: UIMessageStreamWriter<ChatMessage>;
   session: Session;
+  mode?: 'update' | 'version';
 }
 
 export interface DocumentHandler<T = ArtifactKind> {
@@ -71,15 +72,28 @@ export function createDocumentHandler<T extends ArtifactKind>(config: {
         description: args.description,
         dataStream: args.dataStream,
         session: args.session,
+        mode: args.mode,
       });
 
-      if (args.session?.user?.id) {
-        await saveDocument({
+      // 根据模式决定更新策略
+      const mode = args.mode ?? 'update';
+      if (mode === 'version') {
+        // 新增一个版本（同 id，不同 createdAt）
+        if (args.session?.user?.id) {
+          await saveDocument({
+            id: args.document.id,
+            title: args.document.title,
+            content: draftContent,
+            kind: config.kind,
+            userId: args.session.user.id,
+          });
+        }
+      } else {
+        // 原地更新当前文档版本
+        await updateDocumentContent({
           id: args.document.id,
-          title: args.document.title,
+          createdAt: args.document.createdAt,
           content: draftContent,
-          kind: config.kind,
-          userId: args.session.user.id,
         });
       }
 

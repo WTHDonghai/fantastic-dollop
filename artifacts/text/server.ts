@@ -8,7 +8,7 @@ export const textDocumentHandler = createDocumentHandler<'text'>({
   kind: 'text',
   onCreateDocument: async ({ id, title, dataStream }) => {
     // id： 文档Id； title: 文档标题
-    console.log(`== textDocumentHandler == #id: ${id},#title: ${title}`)
+    console.log(`== textDocumentHandler onCreateDocument == #id: ${id},#title: ${title}`)
     let draftContent = '';
 
     const fullStream = await graphStream({
@@ -80,6 +80,7 @@ export const textDocumentHandler = createDocumentHandler<'text'>({
     return draftContent;
   },
   onUpdateDocument: async ({ document, description, dataStream }) => {
+    console.log(`== textDocumentHandler onUpdateDocument == #title: ${document.title}`)
     let draftContent = '';
 
     const { fullStream } = streamText({

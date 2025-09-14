@@ -16,6 +16,7 @@ import { MultimodalInput } from './multimodal-input';
 import { Toolbar } from './toolbar';
 import { VersionFooter } from './version-footer';
 import { ArtifactActions } from './artifact-actions';
+import { UpdateModeToggle } from './update-mode-toggle';
 import { ArtifactCloseButton } from './artifact-close-button';
 import { ArtifactMessages } from './artifact-messages';
 import { useSidebar } from './ui/sidebar';
@@ -436,15 +437,18 @@ function PureArtifact({
                 </div>
               </div>
 
-              <ArtifactActions
-                artifact={artifact}
-                currentVersionIndex={currentVersionIndex}
-                handleVersionChange={handleVersionChange}
-                isCurrentVersion={isCurrentVersion}
-                mode={mode}
-                metadata={metadata}
-                setMetadata={setMetadata}
-              />
+              <div className="flex items-center gap-3">
+                <UpdateModeToggle />
+                <ArtifactActions
+                  artifact={artifact}
+                  currentVersionIndex={currentVersionIndex}
+                  handleVersionChange={handleVersionChange}
+                  isCurrentVersion={isCurrentVersion}
+                  mode={mode}
+                  metadata={metadata}
+                  setMetadata={setMetadata}
+                />
+              </div>
             </div>
 
             <div className="dark:bg-muted bg-background h-full overflow-y-scroll !max-w-full items-center">
