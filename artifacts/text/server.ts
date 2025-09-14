@@ -1,5 +1,4 @@
-import { smoothStream, streamText } from 'ai';
-import { myProvider } from '@/lib/ai/providers';
+
 import { createDocumentHandler } from '@/lib/artifacts/server';
 import { updateDocumentPrompt } from '@/lib/ai/prompts';
 import { graphStream } from '@/lib/langgraph/graph';
@@ -83,34 +82,59 @@ export const textDocumentHandler = createDocumentHandler<'text'>({
     console.log(`== textDocumentHandler onUpdateDocument == #title: ${document.title}`)
     let draftContent = '';
 
-    const { fullStream } = streamText({
-      model: myProvider.languageModel('artifact-model'),
-      system: updateDocumentPrompt(document.content, 'text'),
-      experimental_transform: smoothStream({ chunking: 'word' }),
-      prompt: description,
-      providerOptions: {
-        openai: {
-          prediction: {
-            type: 'content',
-            content: document.content,
-          },
-        },
-      },
-    });
+    const fullStream = await graphStream({
+      graphId: 'document-writer',
+      threadId: document.id,
+      model: 'openai/qwen-plus',
+      systemPrompt: updateDocumentPrompt(document.content ?? '', 'text'),
+      input: { messages: [{ role: 'user', content: description }] },
+    })
 
-    for await (const delta of fullStream) {
-      const { type } = delta;
+    let eventCount = 0;
+    for await (const chunk of fullStream as AsyncIterable<any>) {
+      eventCount++;
 
-      if (type === 'text') {
-        const { text } = delta;
+      if (chunk.data) {
+        const data = chunk.data as any;
+        const event = chunk.event;
 
-        draftContent += text;
+        if (event === 'messages') {
+          if (data && Array.isArray(data)) {
+            const messageChunk = data[0];
 
-        dataStream.write({
-          type: 'data-textDelta',
-          data: text,
-          transient: true,
-        });
+            const msg_type: string = messageChunk?.type;
+            const content = messageChunk?.content;
+            const additional_kwargs = messageChunk?.additional_kwargs;
+
+            let text: string | undefined;
+            if (typeof content === 'string') {
+              text = content;
+            } else if (Array.isArray(content)) {
+              text = content
+                .map((c: any) =>
+                  typeof c === 'string'
+                    ? c
+                    : typeof c?.text === 'string'
+                      ? c.text
+                      : ''
+                )
+                .join('');
+            } else if (content && typeof content?.text === 'string') {
+              text = content.text;
+            }
+
+            if (msg_type === 'AIMessageChunk') {
+              if (text?.length) {
+                draftContent += text;
+                dataStream.write({
+                  type: 'data-textDelta',
+                  data: text,
+                  transient: true,
+                });
+              }
+            }
+          }
+        }
       }
     }
 
