@@ -6,19 +6,21 @@
       "type": "pwa-node",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/next/dist/bin/next",
+      "trace": true,
       "runtimeArgs": [
         "--inspect"
       ],
       "skipFiles": [
         "<node_internals>/**"
       ],
+      "console": "integratedTerminal",
       "cwd": "${workspaceFolder}",
       "serverReadyAction": {
         "action": "debugWithEdge",
         "killOnServerStop": true,
         "pattern": "- Local:.+(https?://.+)",
         "uriFormat": "%s",
-        "webRoot": "${workspaceFolder}/app"
+        "webRoot": "${workspaceFolder}/page"
       }
     }
   ]
